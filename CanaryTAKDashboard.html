@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: black;
+            color: yellow;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            padding: 5px;
+            margin-top: 5px;
+            width: 10%;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #persistDOALineButton {
+            font-size: 18px;
+            width: 200px; /* Adjust width as needed */
+        }
+        #persistDOALineButton.true-state {
+            background-color: green;
+            color: white;
+        }
+        #persistDOALineButton.false-state {
+            background-color: red;
+            color: white;
+        }
+        #saveKrakenServerButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #saveTAKServerIPButton,
+        #saveTAKServerPortButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize toggle state
+        var persistDOALineToggle = false;
+
+        // Function to toggle the persist DOA Line state
+        function togglePersistDOALine() {
+            persistDOALineToggle = !persistDOALineToggle;
+            var button = document.getElementById("persistDOALineButton");
+
+            if (persistDOALineToggle) {
+                // Incrementing the uid_line with an ascending number
+                var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
+                uid_line = 'DOA-to-TAK-' + uidLineSuffix;
+
+                // Update button style for true state (green)
+                button.classList.add("true-state");
+                button.classList.remove("false-state");
+                button.innerHTML = "Persisting";
+            } else {
+                // Update button style for false state (red)
+                button.classList.add("false-state");
+                button.classList.remove("true-state");
+                button.innerHTML = "Persist DOA Line";
+            }
+
+            alert("Persist DOA Line set to: " + persistDOALineToggle + " with UID: " + uid_line);
+        }
+
+        // Event listener for Toggle Persist DOA Line button
+        document.getElementById("persistDOALineButton").addEventListener("click", function () {
+            togglePersistDOALine();
+        });
+
+        // Event listener for Save Kraken Server button
+        document.getElementById("saveKrakenServerButton").addEventListener("click", function () {
+            var newKrakenServer = document.getElementById("krakenServerInput").value;
+            if (newKrakenServer !== "") {
+                krakenServer = newKrakenServer;
+                alert("Kraken Server updated successfully!");
+            }
+        });
+
+        // Event listener for Save TAK Server IP button
+        document.getElementById("saveTAKServerIPButton").addEventListener("click", function () {
+            var newTAKServerIP = document.getElementById("takServerIpInput").value;
+            if (newTAKServerIP !== "") {
+                takServerIP = newTAKServerIP;
+                alert("TAK Server IP updated successfully!");
+            }
+        });
+
+        // Event listener for Save TAK Server Port button
+        document.getElementById("saveTAKServerPortButton").addEventListener("click", function () {
+            var newTAKServerPort = document.getElementById("takServerPortInput").value;
+            if (newTAKServerPort !== "") {
+                takServerPort = parseInt(newTAKServerPort);
+                alert("TAK Server Port updated successfully!");
+            }
+        });
+    });
+</script>
+    
+</head>
+<body>
+    <h1>Kraken to TAK</h1>
+
+    <button id="persistDOALineButton" class="false-state">Persist DOA Line</button>
+    
+    <label for="krakenServerInput">Kraken Server:</label>
+    <input type="text" id="krakenServerInput" placeholder="Enter new Kraken Server">
+    <button id="saveKrakenServerButton">Save</button>
+    
+    <label for="takServerIpInput">TAK Server IP:</label>
+    <input type="text" id="takServerIpInput" placeholder="Enter new TAK Server IP">
+    <button id="saveTAKServerIPButton">Save</button>
+
+    <label for="takServerPortInput">TAK Server Port:</label>
+    <input type="text" id="takServerPortInput" placeholder="Enter new TAK Server Port">
+    <button id="saveTAKServerPortButton">Save</button>
+</body>
+</html>
+
+
+
