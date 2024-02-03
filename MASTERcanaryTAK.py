@@ -12,8 +12,9 @@ from threading import Thread
 app = Flask(__name__)
 
 persist_doa_line = ''
-kraken_server = 'defaultKrakenIP'
-tak_server_ip = 'defaultTakIP'
+kraken_server = '10.0.0.16'
+url = "http://{0}:8081/DOA_value.html".format(kraken_server)
+tak_server_ip = '239.2.3.1'
 tak_server_port = '6969'
 default_hae = 999999
 default_ce = 35.0
@@ -57,7 +58,7 @@ def get_gps_data():
         return None, None
 
 # Function to create CoT XML payload for point feature
-def create_cot_xml_payload_point(latitude, longitude, hae, ce, le, callsign, endpoint, phone, uid, group_name, group_role, geopointsrc, altsrc, battery, device, platform, os, version, speed, course):
+def create_cot_xml_payload_point(latitude, longitude, callsign, endpoint, phone, uid, group_name, group_role, geopointsrc, altsrc, battery, device, platform, os, version, speed, course):
     return f'''<?xml version="1.0"?>
     <event version="2.0" uid="{uid}" type="a-f-G-U-C"
     time="{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}"
@@ -81,7 +82,7 @@ def create_cot_xml_payload_point(latitude, longitude, hae, ce, le, callsign, end
 # Function to create CoT XML payload for line feature
 def create_cot_xml_payload_line(latitude, longitude, second_point, uid):
     return f"""<?xml version='1.0' encoding='utf-8' standalone='yes'?>
-        <event version='2.0' uid='{uid}' type='u-d-f' time='{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}'
+        <event version='2.0' uid='{uid_line}' type='u-d-f' time='{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}'
         start='{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}'
         stale='{(datetime.datetime.utcnow() + datetime.timedelta(seconds=75)).strftime('%Y-%m-%dT%H:%M:%S.995Z')}' how='h-e'>
             <point lat='{latitude}' lon='{longitude}' hae='999999' ce='35.0' le='999999'/>
@@ -103,13 +104,6 @@ def create_cot_xml_payload_line(latitude, longitude, second_point, uid):
         </event>
     """
 
-# def update_tak_server_settings():
-#     global tak_server_ip, tak_server_port
-#     tak_server_ip = request.json.get('tak_server_ip')
-#     tak_server_port = request.json.get('tak_server_port')
-#     logging.info(f"TAK Server settings updated - IP: {tak_server_ip}, Port: {tak_server_port}")
-
-
 @app.route('/')
 def index():
     return render_template('CanaryTAKDashboard.html')
@@ -120,9 +114,11 @@ def update_settings():
         foobar = request.get_json()
         logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
-        global persist_doa_line, kraken_server, tak_server_ip, tak_server_port
+        global persist_doa_line, uid_line, kraken_server, tak_server_ip, tak_server_port
         persist_doa_line = request.form.get('persist_doa_line')
         
+        if 'uid_line' in foobar:
+            uid_line = data['uid_line']
         
         if 'kraken_server' in foobar:
             kraken_server = foobar['kraken_server']
@@ -134,9 +130,6 @@ def update_settings():
         if 'tak_server_port' in foobar:
             tak_server_port = foobar['tak_server_port']
 
-        # tak_server_thread = Thread(target=update_tak_server_settings)
-        # tak_server_thread.start()
-    
         return 'Settings updated successfully'
     except Exception as e:
         logging.error(f"Error updating settings: {e}")
@@ -165,7 +158,7 @@ if __name__ == "__main__":
             callsign_point = "Kraken Spot"
             endpoint_point = ""
             phone_point = ""
-            uid_point = "Router-to-TAK"
+            uid_point = "SignalMedic"
             group_name_point = "Yellow"
             group_role_point = "Team Member"
             geopointsrc_point = "GPS"
@@ -177,12 +170,21 @@ if __name__ == "__main__":
             version_point = ""
             speed_point = "0.00000000"
             course_point = ""
+            
+            cot_xml_payload_point = create_cot_xml_payload_point(
+                latitude, longitude, callsign_point, endpoint_point, phone_point, uid_point,
+                group_name_point, group_role_point, geopointsrc_point,
+                altsrc_point, battery_point, device_point, platform_point,
+                os_point, version_point, speed_point, course_point
+            )
 
+
+            send_cot_payload(cot_xml_payload_point)
  
 
             # Line feature
             try:
-                kraken_response = requests.get("http://10.0.0.16:8081/DOA_value.html")
+                kraken_response = requests.get(url)
                 kraken_data = kraken_response.text
 
                 data_parts = kraken_data.split(',')
