@@ -13,8 +13,11 @@ app = Flask(__name__)
 
 persist_doa_line = ''
 kraken_server = ''
-tak_server_ip = ''
-tak_server_port = ''
+tak_server_ip = '239.2.3.1'
+tak_server_port = '6969'
+default_hae = 999999
+default_ce = 35.0
+default_le = 999999
 
 # Function to calculate the second point
 def calculate_second_point(lat1, lon1, bearing, distance):
@@ -34,8 +37,8 @@ def calculate_second_point(lat1, lon1, bearing, distance):
 def send_cot_payload(cot_xml_payload):
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
-            udp_socket.sendto(cot_xml_payload.encode(), ("239.2.3.1", 6969))
-            logging.info("CoT XML Payload sent successfully")
+            udp_socket.sendto(cot_xml_payload.encode(), (tak_server_ip, int(tak_server_port)))
+            logging.info(f"CoT XML Payload sent successfully to {tak_server_ip}:{tak_server_port}")
     except socket.error as e:
         logging.error(f"Socket error: {e}")
 
@@ -59,7 +62,7 @@ def create_cot_xml_payload_point(latitude, longitude, hae, ce, le, callsign, end
     start="{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}"
     stale="{(datetime.datetime.utcnow() + datetime.timedelta(seconds=75)).strftime('%Y-%m-%dT%H:%M:%S.995Z')}"
     how="m-g">
-        <point lat="{latitude}" lon="{longitude}" hae="{hae}" ce="{ce}" le="{le}" />
+        <point lat="{latitude}" lon="{longitude}" hae="999999" ce="35.0" le="999999" />
         <detail>
             <contact endpoint="{endpoint}" phone="{phone}" callsign="{callsign}" />
             <uid Droid="{callsign}" />
@@ -98,22 +101,33 @@ def create_cot_xml_payload_line(latitude, longitude, second_point, uid):
         </event>
     """
 
+def update_tak_server_settings():
+    global tak_server_ip, tak_server_port
+    tak_server_ip = request.json.get('tak_server_ip')
+    tak_server_port = request.json.get('tak_server_port')
+    logging.info(f"TAK Server settings updated - IP: {tak_server_ip}, Port: {tak_server_port}")
+
+
 @app.route('/')
 def index():
     return render_template('CanaryTAKDashboard.html')
 
 @app.route('/update_settings', methods=['POST'])
 def update_settings():
-    form = request.get_json()
-    # Extract parameters from the POST request
-    global persist_doa_line, kraken_server, tak_server_ip, tak_server_port
-    persist_doa_line = request.form.get('persist_doa_line')
-    kraken_server = form['kraken_server']
-
-    tak_server_ip = request.form.get('tak_server_ip')
-    tak_server_port = request.form.get('tak_server_port')
+    try:
+        form = request.get_json()
+        # Extract parameters from the POST request
+        global persist_doa_line, kraken_server, tak_server_ip, tak_server_port
+        persist_doa_line = request.form.get('persist_doa_line')
+        kraken_server = form['kraken_server']
     
-    return 'Settings updated successfully'
+        tak_server_thread = Thread(target=update_tak_server_settings)
+        tak_server_thread.start()
+    
+        return 'Settings updated successfully'
+    except Exception as e:
+        logging.error(f"Error updating settings: {e}")
+        return 'Failed to update settings'
 
 def run_flask():
     if __name__ == '__main__':
@@ -122,12 +136,6 @@ def run_flask():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    
-    udp_ip = "239.2.3.1"
-    udp_port = 6969
-    default_ce = 9999999
-    default_hae = 9999999
-    default_le = 9999999
 
     # Start Flask in a separate thread
     flask_thread = Thread(target=run_flask)
