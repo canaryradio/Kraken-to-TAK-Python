@@ -92,6 +92,17 @@
             var newKrakenServer = document.getElementById("krakenServerInput").value;
             if (newKrakenServer !== "") {
                 krakenServer = newKrakenServer;
+                // should match whatever route you are using
+                fetch('/update_settings', {
+                    // and method
+                    method: 'POST',
+                    headers: {
+                        // if it is not a form, use JSON
+                        'Content-Type': 'application/json'
+                    },
+                    // should match whatever variables you are looking for in route
+                    body: JSON.stringify({ kraken_server: newKrakenServer })
+                });
                 alert("Kraken Server updated successfully!");
             }
         });
