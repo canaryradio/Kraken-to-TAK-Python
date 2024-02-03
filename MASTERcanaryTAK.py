@@ -12,8 +12,8 @@ from threading import Thread
 app = Flask(__name__)
 
 persist_doa_line = ''
-kraken_server = ''
-tak_server_ip = '239.2.3.1'
+kraken_server = 'defaultKrakenIP'
+tak_server_ip = 'defaultTakIP'
 tak_server_port = '6969'
 default_hae = 999999
 default_ce = 35.0
@@ -40,6 +40,8 @@ def send_cot_payload(cot_xml_payload):
             udp_socket.sendto(cot_xml_payload.encode(), (tak_server_ip, int(tak_server_port)))
             logging.info(f"CoT XML Payload sent successfully to {tak_server_ip}:{tak_server_port}")
     except socket.error as e:
+        logging.error(f"Socket error: takServerIp: {tak_server_ip}")
+        logging.error(f"Socket error: takServerPort: {tak_server_port}")
         logging.error(f"Socket error: {e}")
 
 # Function to get GPS data
@@ -101,11 +103,11 @@ def create_cot_xml_payload_line(latitude, longitude, second_point, uid):
         </event>
     """
 
-def update_tak_server_settings():
-    global tak_server_ip, tak_server_port
-    tak_server_ip = request.json.get('tak_server_ip')
-    tak_server_port = request.json.get('tak_server_port')
-    logging.info(f"TAK Server settings updated - IP: {tak_server_ip}, Port: {tak_server_port}")
+# def update_tak_server_settings():
+#     global tak_server_ip, tak_server_port
+#     tak_server_ip = request.json.get('tak_server_ip')
+#     tak_server_port = request.json.get('tak_server_port')
+#     logging.info(f"TAK Server settings updated - IP: {tak_server_ip}, Port: {tak_server_port}")
 
 
 @app.route('/')
@@ -115,14 +117,25 @@ def index():
 @app.route('/update_settings', methods=['POST'])
 def update_settings():
     try:
-        form = request.get_json()
+        foobar = request.get_json()
+        logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
         global persist_doa_line, kraken_server, tak_server_ip, tak_server_port
         persist_doa_line = request.form.get('persist_doa_line')
-        kraken_server = form['kraken_server']
-    
-        tak_server_thread = Thread(target=update_tak_server_settings)
-        tak_server_thread.start()
+        
+        
+        if 'kraken_server' in foobar:
+            kraken_server = foobar['kraken_server']
+        
+
+        if 'tak_server_ip' in foobar:
+            tak_server_ip = foobar['tak_server_ip']
+
+        if 'tak_server_port' in foobar:
+            tak_server_port = foobar['tak_server_port']
+
+        # tak_server_thread = Thread(target=update_tak_server_settings)
+        # tak_server_thread.start()
     
         return 'Settings updated successfully'
     except Exception as e:
@@ -143,6 +156,7 @@ if __name__ == "__main__":
 
     while True:
         logging.info('Kraken server:' + kraken_server)
+        logging.info('Tak Server:' + tak_server_ip + ':' + tak_server_port)
         # Get GPS data
         latitude, longitude = get_gps_data()
 
@@ -164,12 +178,7 @@ if __name__ == "__main__":
             speed_point = "0.00000000"
             course_point = ""
 
-            cot_xml_payload_point = create_cot_xml_payload_point(latitude, longitude, default_hae, default_ce, default_le,
-                                                                callsign_point, endpoint_point, phone_point, uid_point,
-                                                                group_name_point, group_role_point, geopointsrc_point,
-                                                                altsrc_point, battery_point, device_point, platform_point,
-                                                                os_point, version_point, speed_point, course_point)
-            send_cot_payload(cot_xml_payload_point)
+ 
 
             # Line feature
             try:

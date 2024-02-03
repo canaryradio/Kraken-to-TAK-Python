@@ -53,79 +53,101 @@
     </style>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialize toggle state
-        var persistDOALineToggle = false;
-        var uid_line = 'DOA-to-TAK';
+    // Initialize toggle state
+    var persistDOALineToggle = false;
+    var uid_line = 'DOA-to-TAK';
 
+    // Function to toggle the persist DOA Line state
+    function togglePersistDOALine() {
+        persistDOALineToggle = !persistDOALineToggle;
+        var button = document.getElementById("persistDOALineButton");
 
-        // Function to toggle the persist DOA Line state
-        function togglePersistDOALine() {
-            persistDOALineToggle = !persistDOALineToggle;
-            var button = document.getElementById("persistDOALineButton");
+        if (persistDOALineToggle) {
+            // Incrementing the uid_line with an ascending number
+            var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
+            uid_line = 'DOA-to-TAK-' + uidLineSuffix;
 
-            if (persistDOALineToggle) {
-                // Incrementing the uid_line with an ascending number
-                var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
-                uid_line = 'DOA-to-TAK-' + uidLineSuffix;
-
-                // Update button style for true state (green)
-                button.classList.add("true-state");
-                button.classList.remove("false-state");
-                button.innerHTML = "Persisting";
-            } else {
-                // Update button style for false state (red)
-                button.classList.add("false-state");
-                button.classList.remove("true-state");
-                button.innerHTML = "Persist DOA Line";
-            }
-
-            alert("Persist DOA Line set to: " + persistDOALineToggle + " with UID: " + uid_line);
+            // Update button style for true state (green)
+            button.classList.add("true-state");
+            button.classList.remove("false-state");
+            button.innerHTML = "Persisting";
+        } else {
+            // Update button style for false state (red)
+            button.classList.add("false-state");
+            button.classList.remove("true-state");
+            button.innerHTML = "Persist DOA Line";
         }
 
-        // Event listener for Toggle Persist DOA Line button
-        document.getElementById("persistDOALineButton").addEventListener("click", function () {
-            togglePersistDOALine();
-        });
+        alert("Persist DOA Line set to: " + persistDOALineToggle + " with UID: " + uid_line);
+    }
 
-        // Event listener for Save Kraken Server button
-        document.getElementById("saveKrakenServerButton").addEventListener("click", function () {
-            var newKrakenServer = document.getElementById("krakenServerInput").value;
-            if (newKrakenServer !== "") {
-                krakenServer = newKrakenServer;
-                // should match whatever route you are using
-                fetch('/update_settings', {
-                    // and method
-                    method: 'POST',
-                    headers: {
-                        // if it is not a form, use JSON
-                        'Content-Type': 'application/json'
-                    },
-                    // should match whatever variables you are looking for in route
-                    body: JSON.stringify({ kraken_server: newKrakenServer })
-                });
-                alert("Kraken Server updated successfully!");
-            }
-        });
+    // Event listener for Toggle Persist DOA Line button
+    document.getElementById("persistDOALineButton").addEventListener("click", togglePersistDOALine);
 
-        // Event listener for Save TAK Server IP button
-        document.getElementById("saveTAKServerIPButton").addEventListener("click", function () {
-            var newTAKServerIP = document.getElementById("takServerIpInput").value;
-            if (newTAKServerIP !== "") {
-                takServerIP = newTAKServerIP;
-                alert("TAK Server IP updated successfully!");
-            }
-        });
-
-        // Event listener for Save TAK Server Port button
-        document.getElementById("saveTAKServerPortButton").addEventListener("click", function () {
-            var newTAKServerPort = document.getElementById("takServerPortInput").value;
-            if (newTAKServerPort !== "") {
-                takServerPort = parseInt(newTAKServerPort);
-                alert("TAK Server Port updated successfully!");
-            }
-        });
+    // Event listener for Save Kraken Server button
+    document.getElementById("saveKrakenServerButton").addEventListener("click", function () {
+        var newKrakenServer = document.getElementById("krakenServerInput").value;
+        if (newKrakenServer.trim() !== "") {  // Trim to handle potential extra whitespaces
+            // Ensure correct route, method, and JSON format for your specific server-side implementation
+            fetch('/update_settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ kraken_server: newKrakenServer })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            alert("Kraken Server updated successfully!");
+        } else {
+            alert("Please enter a valid Kraken Server address.");
+        }
     });
+
+    var saveTakStuff = function () {
+        var newTAKServerIP = document.getElementById("takServerIpInput").value;
+        var newTAKServerPort = document.getElementById("takServerPortInput").value;
+
+        // Check if both TAK Server IP and Port are provided and are valid integers
+        if (newTAKServerIP.trim() !== "" && /^\d+$/.test(newTAKServerPort.trim())) {
+
+            // Send data as JSON to the server for updating settings
+            fetch('/update_settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tak_server_ip: newTAKServerIP, tak_server_port: newTAKServerPort })
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Display the response from the server in an alert
+                alert(data);
+            })
+            .catch(error => {
+                // Log any errors that occur during the fetch request
+                console.error('Error:', error);
+            });
+
+            // Display a success message to the user
+            alert("TAK Server IP and Port updated successfully!");
+        } else {
+            // Display an alert if either TAK Server IP or Port is missing or invalid
+            alert("Please enter both a valid TAK Server IP and Port before saving.");
+        }
+    }
+    
+
+    // Event listener for Save TAK Server IP and Port button
+    document.getElementById("saveTAKServerButton").addEventListener("click", saveTakStuff);
+});
 </script>
+
     
 </head>
 <body>
@@ -134,17 +156,18 @@
     <button id="persistDOALineButton" class="false-state">Persist DOA Line</button>
     
     <label for="krakenServerInput">Kraken Server:</label>
-    <input type="text" id="krakenServerInput" placeholder="Enter new Kraken Server">
+    <input type="text" id="krakenServerInput" placeholder="Enter new Kraken Server IPv4 Address">
     <button id="saveKrakenServerButton">Save</button>
     
     <label for="takServerIpInput">TAK Server IP:</label>
-    <input type="text" id="takServerIpInput" placeholder="Enter new TAK Server IP">
-    <button id="saveTAKServerIPButton">Save</button>
-
+    <input type="text" id="takServerIpInput" placeholder="Enter new TAK IPv4 Address">
+    
     <label for="takServerPortInput">TAK Server Port:</label>
-    <input type="text" id="takServerPortInput" placeholder="Enter new TAK Server Port">
-    <button id="saveTAKServerPortButton">Save</button>
+    <input type="text" id="takServerPortInput" placeholder="Enter new TAK Port">
+    
+    <button id="saveTAKServerButton">Save</button>
 </body>
+
 </html>
 
 
