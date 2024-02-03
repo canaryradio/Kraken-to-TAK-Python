@@ -11,6 +11,11 @@ from threading import Thread
 
 app = Flask(__name__)
 
+persist_doa_line = ''
+kraken_server = ''
+tak_server_ip = ''
+tak_server_port = ''
+
 # Function to calculate the second point
 def calculate_second_point(lat1, lon1, bearing, distance):
     R = 6371  # Radius of the Earth in kilometers
@@ -99,9 +104,12 @@ def index():
 
 @app.route('/update_settings', methods=['POST'])
 def update_settings():
+    form = request.get_json()
     # Extract parameters from the POST request
+    global persist_doa_line, kraken_server, tak_server_ip, tak_server_port
     persist_doa_line = request.form.get('persist_doa_line')
-    kraken_server = request.form.get('kraken_server')
+    kraken_server = form['kraken_server']
+
     tak_server_ip = request.form.get('tak_server_ip')
     tak_server_port = request.form.get('tak_server_port')
     
@@ -114,7 +122,7 @@ def run_flask():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-
+    
     udp_ip = "239.2.3.1"
     udp_port = 6969
     default_ce = 9999999
@@ -126,6 +134,7 @@ if __name__ == "__main__":
     flask_thread.start()
 
     while True:
+        logging.info('Kraken server:' + kraken_server)
         # Get GPS data
         latitude, longitude = get_gps_data()
 
