@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kraken to TAK</title>
     <style>
         body {
             background-color: black;
@@ -11,7 +12,10 @@
             padding: 20px;
         }
         h1 {
-            font-size: 24px;
+            font-size: 40px;
+        }
+        h2 {
+            font-size: 20px;
         }
         label {
             display: block;
@@ -45,11 +49,11 @@
             background-color: #4CAF50;
             color: white;
         }
-        #saveTAKServerIPButton,
-        #saveTAKServerPortButton {
+        #saveTAKServerButton {
             background-color: #4CAF50;
             color: white;
         }
+        
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -59,49 +63,45 @@
     
             // Function to toggle the persist DOA Line state
             function togglePersistDOALine() {
-                persistDOALineToggle = !persistDOALineToggle;
                 var button = document.getElementById("persistDOALineButton");
-    
-                if (persistDOALineToggle) {
-                    // Incrementing the uid_line with an ascending number
-                    var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
-                    uid_line = 'DOA-to-TAK-' + uidLineSuffix;
-    
-                    // Make an AJAX request to update the uid_line variable
-                    updateServerSettings(true, uid_line);
-    
-                    // Update button style for true state (green)
-                    button.classList.add("true-state");
-                    button.classList.remove("false-state");
-                    button.innerHTML = "Persisting DOA Lines";
-                } else {
-                    // Update button style for false state (red)
-                    button.classList.add("false-state");
-                    button.classList.remove("true-state");
-                    button.innerHTML = "Persist DOA Line";
-                }
+                var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
+                var updatedUid_line = 'DOA-to-TAK-' + uidLineSuffix;
     
                 // Make an AJAX request to update the uid_line variable
-                updateServerSettings(false, uid_line);
-    
-                // Alert outside the if-else block
-                alert("Persist DOA Line set to: " + persistDOALineToggle + " with UID: " + uid_line);
+                updateServerSettings(!persistDOALineToggle, updatedUid_line, function () {
+                    if (!persistDOALineToggle) {
+                        // Update button style for true state (green)
+                        button.classList.add("true-state");
+                        button.classList.remove("false-state");
+                        button.innerHTML = "Persisting DOA Lines";
+                    } else {
+                        // Update button style for false state (red)
+                        button.classList.add("false-state");
+                        button.classList.remove("true-state");
+                        button.innerHTML = "Persist DOA Line";
+                    }
+
+                    // Alert outside the if-else block
+                    alert("Persist DOA Line set to: " + !persistDOALineToggle + " with UID: " + updatedUid_line);
+                });
             }
     
             // Function to make an AJAX request to update the server settings
-            function updateServerSettings(persistDOALineToggle, uid_line) {
+            function updateServerSettings(persistDOALineToggle, uid_line, callback) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/update_settings", true);
                 xhr.setRequestHeader("Content-Type", "application/json");
     
                 // Create JSON object with updated settings
                 var settings = {
+                    persist_doa_line: persistDOALineToggle,
                     uid_line: uid_line
                 };
     
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         console.log("Settings updated successfully");
+                        callback();
                     }
                 };
     
@@ -177,19 +177,31 @@
 </head>
 <body>
     <h1>Kraken to TAK</h1>
-
-    <button id="persistDOALineButton" class="false-state">Persist DOA Line</button>
-    
-    <label for="krakenServerInput">Kraken Server:</label>
-    <input type="text" id="krakenServerInput" placeholder="Enter new Kraken Server IPv4 Address">
+    <label for="krakenServerInput">Kraken Server IPv4:</label>
+    <input type="text" id="krakenServerInput" placeholder="Default 0.0.0.0">
     <button id="saveKrakenServerButton">Save</button>
     
-    <label for="takServerIpInput">TAK Server IP:</label>
-    <input type="text" id="takServerIpInput" placeholder="Enter new TAK IPv4 Address">
+    <label for="takServerIpInput">TAK Destination IPv4:</label>
+    <input type="text" id="takServerIpInput" placeholder="Default 239.2.3.1">
     
-    <label for="takServerPortInput">TAK Server Port:</label>
-    <input type="text" id="takServerPortInput" placeholder="Enter new TAK Port">
+    <label for="takServerPortInput">TAK Destination Port:</label>
+    <input type="text" id="takServerPortInput" placeholder="Default 6969">
     
     <button id="saveTAKServerButton">Save</button>
+    <div>
+        <h2>DOA Ignore/ Exclusion Range</h2>
+        <form id="doaIgnoreForm">
+            <label for="startAngle">Start DOA Bearing:</label>
+            <input type="number" id="startAngle" min="0" max="359" required placeholder="A number 0-359">
+            
+            <label for="endAngle">End DOA Bearing:</label>
+            <input type="number" id="endAngle" min="0" max="359" required placeholder="Moving clockwise 0-359">
+
+            <button type="button" onclick="saveDOAIgnoreRange()">Save</button>
+        </form>
+    </div>
+    <label for="persistDOALineButton">New line instead of a single line? Push this. </label>
+    <button id="persistDOALineButton" class="false-state">Persist DOA Line</button>
+    
 </body>
 </html>

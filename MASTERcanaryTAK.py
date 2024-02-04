@@ -11,7 +11,7 @@ from threading import Thread
 
 app = Flask(__name__)
 
-uid_line = ''
+uid_line = 'DOA-to-TAK'
 kraken_server = '10.0.0.16'
 url = "http://{0}:8081/DOA_value.html".format(kraken_server)
 tak_server_ip = '239.2.3.1'
@@ -86,12 +86,12 @@ def create_cot_xml_payload_point(latitude, longitude, callsign, endpoint, phone,
     </event>'''
 
 # Function to create CoT XML payload for line feature
-def create_cot_xml_payload_line(latitude, longitude, second_point, uid):
+def create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line):
     return f"""<?xml version='1.0' encoding='utf-8' standalone='yes'?>
         <event version='2.0' uid='{uid_line}' type='u-d-f' time='{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}'
         start='{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}'
         stale='{(datetime.datetime.utcnow() + datetime.timedelta(seconds=75)).strftime('%Y-%m-%dT%H:%M:%S.995Z')}' how='h-e'>
-            <point lat='{latitude}' lon='{longitude}' hae='999999' ce='35.0' le='999999'/>
+            <point lat='{latitude_kraken}' lon='{longitude_kraken}' hae='999999' ce='35.0' le='999999'/>
             <point lat='{second_point[0]}' lon='{second_point[1]}' hae='999999' ce='35.0' le='999999'/>
             <detail>
                 <link point='{latitude},{longitude}'/>
@@ -121,7 +121,7 @@ def update_settings():
         logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
         global uid_line, kraken_server, tak_server_ip, tak_server_port
-        uid_line_line = request.form.get('uid_line')
+        uid_line = request.form.get('uid_line')
         
         if 'uid_line' in foobar:
             uid_line = foobar['uid_line']
@@ -129,7 +129,6 @@ def update_settings():
         if 'kraken_server' in foobar:
             kraken_server = foobar['kraken_server']
         
-
         if 'tak_server_ip' in foobar:
             tak_server_ip = foobar['tak_server_ip']
 
