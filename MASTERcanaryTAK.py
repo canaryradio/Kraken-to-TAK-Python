@@ -11,7 +11,7 @@ from threading import Thread
 
 app = Flask(__name__)
 
-persist_doa_line = ''
+uid_line = ''
 kraken_server = '10.0.0.16'
 url = "http://{0}:8081/DOA_value.html".format(kraken_server)
 tak_server_ip = '239.2.3.1'
@@ -53,6 +53,12 @@ def get_gps_data():
         latitude = getattr(packet, 'lat', None)
         longitude = getattr(packet, 'lon', None)
         return latitude, longitude
+    except socket.error as se:
+        logging.warning(f"Socket error connecting to GPSD: {se}")
+        return None, None
+    except gpsd.NoFixError:
+        logging.warning("No GPS fix available")
+        return None, None
     except Exception as e:
         logging.error(f"Error getting GPS data: {e}")
         return None, None
@@ -114,11 +120,11 @@ def update_settings():
         foobar = request.get_json()
         logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
-        global persist_doa_line, uid_line, kraken_server, tak_server_ip, tak_server_port
-        persist_doa_line = request.form.get('persist_doa_line')
+        global uid_line, kraken_server, tak_server_ip, tak_server_port
+        uid_line_line = request.form.get('uid_line')
         
         if 'uid_line' in foobar:
-            uid_line = data['uid_line']
+            uid_line = foobar['uid_line']
         
         if 'kraken_server' in foobar:
             kraken_server = foobar['kraken_server']

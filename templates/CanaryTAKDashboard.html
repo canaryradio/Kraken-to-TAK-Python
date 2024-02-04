@@ -31,7 +31,7 @@
         }
         #persistDOALineButton {
             font-size: 18px;
-            width: 200px; /* Adjust width as needed */
+            width: 200px;
         }
         #persistDOALineButton.true-state {
             background-color: green;
@@ -67,13 +67,13 @@
                     var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
                     uid_line = 'DOA-to-TAK-' + uidLineSuffix;
     
-                    // Make an AJAX request to update the persist_doa_line variable
+                    // Make an AJAX request to update the uid_line variable
                     updateServerSettings(true, uid_line);
     
                     // Update button style for true state (green)
                     button.classList.add("true-state");
                     button.classList.remove("false-state");
-                    button.innerHTML = "Persisting";
+                    button.innerHTML = "Persisting DOA Lines";
                 } else {
                     // Update button style for false state (red)
                     button.classList.add("false-state");
@@ -81,7 +81,7 @@
                     button.innerHTML = "Persist DOA Line";
                 }
     
-                // Make an AJAX request to update the persist_doa_line variable
+                // Make an AJAX request to update the uid_line variable
                 updateServerSettings(false, uid_line);
     
                 // Alert outside the if-else block
@@ -96,9 +96,7 @@
     
                 // Create JSON object with updated settings
                 var settings = {
-                    persist_doa_line: persistDOALineToggle,
                     uid_line: uid_line
-                    // Add other settings if needed
                 };
     
                 xhr.onreadystatechange = function () {
