@@ -65,17 +65,17 @@
             color: white;
         }
 
-        #takMulticast {
+        #takMulticastToggle {
             font-size: 18px;
             width: 200px;
         }
 
-        #takMulticast.true-state {
+        #takMulticastToggle.true-state {
             background-color: green;
             color: white;
         }
 
-        #takMulticast.false-state {
+        #takMulticastToggle.false-state {
             background-color: red;
             color: white;
         }
@@ -134,21 +134,33 @@
                 xhr.send(JSON.stringify(settings));
             }
 
-            // Event listener for Toggle Persist DOA Line button
+            // Event listener for Persist DOA Line Button
             document.getElementById("persistDOALineButton").addEventListener("click", togglePersistDOALine);
 
             // TAK Multicast On/Off
             document.addEventListener('DOMContentLoaded', function () {
                 // Initialize toggle state
-                var takMulticastToggleState = true;
-
+                var takMulticastToggle = true;
+                // Set button class based on initial state
+                var button = document.getElementById("takMulticastToggle");
+                if (takMulticastToggle) {
+                    button.classList.add("true-state");
+                    button.classList.remove("false-state");
+                    button.innerHTML = "Broadcasting to 239.2.3.1:6969";
+                } else {
+                    button.classList.add("false-state");
+                    button.classList.remove("true-state");
+                    button.innerHTML = "Not sending multicast";
+                }
+                
                 // Function to toggle TAK Multicast
                 function toggleTAKMulticast() {
-                    var button = document.getElementById("takMulticastToggle");
+                    var button = document.getElementById("takMulticast");
+                    takMulticastToggle = !takMulticastToggle;
 
                     // Make an AJAX request to update the mesh_mode variable
-                    updateServerSettings(!takMulticastToggleState, mesh_mode, function () {
-                        if (!takMulticastToggleState) {
+                    updateServerSettings(!takMulticastToggle, takMulticast, function () {
+                        if (!takMulticastToggle) {
                             // Update button style for true state (green)
                             button.classList.add("true-state");
                             button.classList.remove("false-state");
@@ -161,19 +173,19 @@
                         }
 
                         // Alert outside the if-else block
-                        alert("Enable TAK Multicast set to: " + !takMulticastToggleState + " in state: " + mesh_mode);
+                        alert("Enable TAK Multicast set to: " + !takMulticastToggle + " in state: " + takMulticastToggle);
                     });
                 }
 
                 // Function to make an AJAX request to update the server settings
-                function updateServerSettings(takMulticastToggleState, mesh_mode, callback) {
+                function updateServerSettings(takMulticastToggle, takMulticast, callback) {
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "/update_settings", true);
                     xhr.setRequestHeader("Content-Type", "application/json");
 
                     // Create JSON object with updated settings
                     var settings = {
-                        mesh_mode: takMulticastToggleState,
+                        takMulticast: takMulticastToggle,
                     };
 
                     xhr.onreadystatechange = function () {
@@ -188,7 +200,7 @@
                 }
 
                 // Event listener for TAK Multicast button
-                document.getElementById("takMulticast").addEventListener("click", toggleTAKMulticast);
+                document.getElementById("takMulticastToggle").addEventListener("click", toggleTAKMulticast);
             });
 
             // Event listener for Save Kraken Server button
@@ -262,15 +274,15 @@
     <button id="saveKrakenServerButton">Save</button>
 
     <label for="takServerIpInput">TAK Destination IPv4:</label>
-    <input type="text" id="takServerIpInput" placeholder="Default 239.2.3.1">
+    <input type="text" id="takServerIpInput" placeholder="Default 0.0.0.0">
 
     <label for="takServerPortInput">TAK Destination Port:</label>
-    <input type="text" id="takServerPortInput" placeholder="Default 6969">
+    <input type="text" id="takServerPortInput" placeholder="Default 6666">
 
     <button id="saveTAKServerButton">Save</button>
 
-    <label for="takMulticast">On/Off multicast to 239.2.3.1:6969</label>
-    <button id="takMulticast" class="true-state">Broadcasting</button>
+    <label for="takMulticastToggle">On/Off multicast to 239.2.3.1:6969</label>
+    <button id="takMulticastToggle" class="true-state">Broadcasting</button>
 
     <div>
         <h2>DOA Ignore/ Exclusion Range</h2>

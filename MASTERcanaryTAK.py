@@ -12,13 +12,17 @@ from threading import Thread
 app = Flask(__name__)
 
 uid_line = 'DOA-to-TAK'
-kraken_server = '10.0.0.16'
-url = "http://{0}:8081/DOA_value.html".format(kraken_server)
-tak_server_ip = '239.2.3.1'
-tak_server_port = '6969'
+kraken_server = '0.0.0.0'
+tak_server_ip = '0.0.0.0'
+tak_server_port = '6666'
+tak_multicast_state = True
 default_hae = 999999
 default_ce = 35.0
 default_le = 999999
+
+# Function to query kraken Server
+def url(_kraken_server):
+    return "http://{0}:8081/DOA_value.html".format(_kraken_server)
 
 # Function to calculate the second point
 def calculate_second_point(lat1, lon1, bearing, distance):
@@ -43,6 +47,15 @@ def send_cot_payload(cot_xml_payload):
     except socket.error as e:
         logging.error(f"Socket error: takServerIp: {tak_server_ip}")
         logging.error(f"Socket error: takServerPort: {tak_server_port}")
+        logging.error(f"Socket error: {e}")
+
+# Function to send CoT XML payload to multicast endpoint
+def send_to_multicast(cot_xml_payload_multicast):
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
+            udp_socket.sendto(cot_xml_payload_multicast.encode(), ('239.2.3.1', 6969))
+            logging.info(f"CoT XML Payload sent to multicast endpoint 239.2.3.1:6969")
+    except socket.error as e:
         logging.error(f"Socket error: {e}")
 
 # Function to get GPS data
@@ -120,7 +133,7 @@ def update_settings():
         foobar = request.get_json()
         logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
-        global uid_line, kraken_server, tak_server_ip, tak_server_port
+        global uid_line, kraken_server, tak_server_ip, tak_server_port, tak_multicast_state
         uid_line = request.form.get('uid_line')
         
         if 'uid_line' in foobar:
@@ -134,6 +147,9 @@ def update_settings():
 
         if 'tak_server_port' in foobar:
             tak_server_port = foobar['tak_server_port']
+
+        if 'takMulticast' in foobar:
+            tak_multicast_state = foobar('takMulticast', tak_multicast_state)    
 
         return 'Settings updated successfully'
     except Exception as e:
@@ -185,11 +201,14 @@ if __name__ == "__main__":
 
 
             send_cot_payload(cot_xml_payload_point)
- 
+
+            # Send to Multicast endpoint if takMulticast is True
+            if tak_multicast_state:
+                send_to_multicast(cot_xml_payload_point)
 
             # Line feature
             try:
-                kraken_response = requests.get(url)
+                kraken_response = requests.get(url(kraken_server))
                 kraken_data = kraken_response.text
 
                 data_parts = kraken_data.split(',')
@@ -203,6 +222,10 @@ if __name__ == "__main__":
                 cot_line_payload = create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line)
 
                 send_cot_payload(cot_line_payload)
+
+                # Send to Multicast endpoint if takMulticast is True
+                if tak_multicast_state:
+                    send_to_multicast(cot_line_payload)
 
             except requests.RequestException as e:
                 logging.error(f"HTTP Request error: {e}")
