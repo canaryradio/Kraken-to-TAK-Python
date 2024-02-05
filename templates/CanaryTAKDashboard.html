@@ -285,7 +285,7 @@
 
                 // Make an AJAX request to your Flask backend
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/save_doa_ignore_range", true);
+                xhr.open("POST", "/update_settings", true);
                 xhr.setRequestHeader("Content-Type", "application/json");
 
                 // Convert data to JSON format
@@ -345,7 +345,7 @@
                 <label for="endAngle">End DOA Bearing:</label>
                 <input type="number" id="endAngle" min="0" max="359" required placeholder="Moving clockwise 0-359">
 
-                <button type="button" onclick="saveDOAIgnoreRange()">Save</button>
+                <button id="saveDOAIgnoreRangeButton" type="button">Save</button>
             </form>
         </div>
 

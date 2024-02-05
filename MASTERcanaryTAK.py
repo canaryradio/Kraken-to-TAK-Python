@@ -6,7 +6,7 @@ import time
 import logging
 import math
 import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from threading import Thread
 
 app = Flask(__name__)
@@ -20,8 +20,7 @@ default_hae = 999999
 default_ce = 35.0
 default_le = 999999
 foobar = {}
-start_angle = None
-end_angle = None
+
 
 # Function to query kraken Server
 def url(_kraken_server):
@@ -158,6 +157,7 @@ def update_settings():
             start_angle = foobar['start_angle']
             end_angle = foobar['end_angle']
             logging.info(f"Received DOA Ignore Range: {start_angle} to {end_angle}")
+            return jsonify({"message": "DOA Ignore Range saved successfully"}), 200
 
         return 'Settings updated successfully'
     except Exception as e:
@@ -225,12 +225,15 @@ if __name__ == "__main__":
                 longitude_kraken = float(data_parts[9])
                 max_doa_angle = float(data_parts[1])
 
-                if 'start_angle' is not None in foobar and 'end_angle' is not None in foobar:
+                logging.info(f"max_doa_angle: {max_doa_angle}")
+
+                if 'start_angle' in foobar and 'end_angle' in foobar and foobar['start_angle'] is not None and foobar['end_angle'] is not None:
                     start_angle = float(foobar['start_angle'])
                     end_angle = float(foobar['end_angle'])
                     if start_angle <= max_doa_angle <= end_angle:
-                        pass
+                        logging.info(f"start_angle: {start_angle}, end_angle: {end_angle}, max_doa_angle: {max_doa_angle}")
                     else:
+                        logging.info(f"Condition not met. start_angle: {start_angle}, end_angle: {end_angle}, max_doa_angle: {max_doa_angle}")
                         second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
                         uid_line = 'DOA-to-TAK'
                         cot_line_payload = create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line)
@@ -240,6 +243,7 @@ if __name__ == "__main__":
                             send_to_multicast(cot_line_payload)
 
                 else:
+                    logging.info(f"No DOA Ignore wedge set")
                     second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
 
                     uid_line = 'DOA-to-TAK'
