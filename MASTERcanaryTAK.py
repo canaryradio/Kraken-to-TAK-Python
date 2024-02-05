@@ -19,6 +19,9 @@ tak_multicast_state = True
 default_hae = 999999
 default_ce = 35.0
 default_le = 999999
+foobar = {}
+start_angle = None
+end_angle = None
 
 # Function to query kraken Server
 def url(_kraken_server):
@@ -222,7 +225,7 @@ if __name__ == "__main__":
                 longitude_kraken = float(data_parts[9])
                 max_doa_angle = float(data_parts[1])
 
-                if 'start_angle' in foobar and 'end_angle' in foobar:
+                if 'start_angle' is not None in foobar and 'end_angle' is not None in foobar:
                     start_angle = float(foobar['start_angle'])
                     end_angle = float(foobar['end_angle'])
                     if start_angle <= max_doa_angle <= end_angle:
