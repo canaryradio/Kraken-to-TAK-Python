@@ -29,7 +29,7 @@
         input {
             padding: 5px;
             margin-top: 5px;
-            width: 10%;
+            width: 75%;
         }
 
         button {
@@ -72,12 +72,61 @@
 
         #takMulticastToggle.true-state {
             background-color: green;
-            color: white;
+            color: whitesmoke;
         }
 
         #takMulticastToggle.false-state {
             background-color: red;
-            color: white;
+            color: whitesmoke;
+        }
+
+        #doaIgnoreForm button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: whitesmoke;
+        }
+
+        .group-container {
+            border: 2px solid yellow;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 0 10px 10px 0;
+            text-align: left;
+            max-width: 80%;
+        }
+
+        .read-me-box {
+            width: 45%;
+            margin-left: 20px;
+            border: 2px solid yellow;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .line-item-kraken {
+            margin-bottom: 100px;
+            margin-top: 40px;
+        }
+        .line-item-tak {
+            margin-bottom: 20px;
+        }
+        .line-item-ignore {
+            margin-top: 200px;
+            margin-bottom: 40px;
+        }
+        .line-item-persist {
+            margin-top: 180px;
+            margin-bottom: 10px;
         }
     </style>
     <script>
@@ -146,23 +195,21 @@
                 if (takMulticastToggle) {
                     button.classList.add("true-state");
                     button.classList.remove("false-state");
-                    button.innerHTML = "Broadcasting to 239.2.3.1:6969";
+                    button.innerHTML = "Broadcasting";
                 } else {
                     button.classList.add("false-state");
                     button.classList.remove("true-state");
                     button.innerHTML = "Not sending multicast";
                 }
-                        
+
                 fetch('/update_settings', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ takMulticast: takMulticastToggle })
-                    })            
-            })
-                
-            
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ takMulticast: takMulticastToggle })
+                });
+            });
 
             // Event listener for Save Kraken Server button
             document.getElementById("saveKrakenServerButton").addEventListener("click", function () {
@@ -224,42 +271,114 @@
 
             // Event listener for Save TAK Server IP and Port button
             document.getElementById("saveTAKServerButton").addEventListener("click", saveTakStuff);
+
+            // New function to save DOA Ignore Range
+            function saveDOAIgnoreRange() {
+                var startAngle = document.getElementById("startAngle").value;
+                var endAngle = document.getElementById("endAngle").value;
+
+                // Validate input values (add your own validation logic)
+                if (startAngle === "" || endAngle === "") {
+                    alert("Please fill in both start and end angles.");
+                    return;
+                }
+
+                // Make an AJAX request to your Flask backend
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/save_doa_ignore_range", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                // Convert data to JSON format
+                var data = {
+                    start_angle: startAngle,
+                    end_angle: endAngle
+                };
+
+                // Handle the response from the server
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        alert("DOA Ignore Range saved successfully!");
+                    } else {
+                        alert("Error saving DOA Ignore Range. Please try again.");
+                    }
+                };
+
+                // Send the data to the server
+                xhr.send(JSON.stringify(data));
+            }
+
+            // Event listener for the Save DOA Ignore Range button
+            document.getElementById("saveDOAIgnoreRangeButton").addEventListener("click", saveDOAIgnoreRange);
         });
     </script>
 </head>
 
 <body>
-    <h1>Kraken to TAK</h1>
-    <label for="krakenServerInput">Kraken Server IPv4:</label>
-    <input type="text" id="krakenServerInput" placeholder="Default 0.0.0.0">
-    <button id="saveKrakenServerButton">Save</button>
+    <div class="flex-container">    
+      <div class="groups=columan">
+        <h1>Kraken to TAK</h1>
 
-    <label for="takServerIpInput">TAK Destination IPv4:</label>
-    <input type="text" id="takServerIpInput" placeholder="Default 0.0.0.0">
+        <div class="group-container">
+            <label for="krakenServerInput">Kraken Server IPv4:</label>
+            <input type="text" id="krakenServerInput" placeholder="Default 0.0.0.0">
+            <button id="saveKrakenServerButton">Save</button>
+        </div>
 
-    <label for="takServerPortInput">TAK Destination Port:</label>
-    <input type="text" id="takServerPortInput" placeholder="Default 6666">
+        <div class="group-container">
+            <label for="takServerIpInput">TAK Destination IPv4:</label>
+            <input type="text" id="takServerIpInput" placeholder="Default 0.0.0.0">
 
-    <button id="saveTAKServerButton">Save</button>
+            <label for="takServerPortInput">TAK Destination Port:</label>
+            <input type="text" id="takServerPortInput" placeholder="Default 6666">
+            <button id="saveTAKServerButton">Save</button>
 
-    <label for="takMulticastToggle">On/Off multicast to 239.2.3.1:6969</label>
-    <button id="takMulticastToggle" class="true-state">Broadcasting</button>
+            <label for="takMulticastToggle">On/Off Multicast</label>
+            <button id="takMulticastToggle" class="true-state">Broadcasting</button>   
+        </div>
 
-    <div>
-        <h2>DOA Ignore/ Exclusion Range</h2>
-        <form id="doaIgnoreForm">
-            <label for="startAngle">Start DOA Bearing:</label>
-            <input type="number" id="startAngle" min="0" max="359" required placeholder="A number 0-359">
+        <div class="group-container">
+            <h2>DOA Ignore/ Exclusion Range</h2>
+            <form id="doaIgnoreForm">
+                <label for="startAngle">Start DOA Bearing:</label>
+                <input type="number" id="startAngle" min="0" max="359" required placeholder="A number 0-359">
 
-            <label for="endAngle">End DOA Bearing:</label>
-            <input type="number" id="endAngle" min="0" max="359" required placeholder="Moving clockwise 0-359">
+                <label for="endAngle">End DOA Bearing:</label>
+                <input type="number" id="endAngle" min="0" max="359" required placeholder="Moving clockwise 0-359">
 
-            <button type="button" onclick="saveDOAIgnoreRange()">Save</button>
-        </form>
+                <button type="button" onclick="saveDOAIgnoreRange()">Save</button>
+            </form>
+        </div>
+
+        <div class="group-container">
+            <label for="persistDOALineButton">New line instead of a single line? Push this.</label>
+            <button id="persistDOALineButton" class="false-state">Persist DOA Line</button>
+        </div>
+      </div>
+
+        <div class="read-me-box">
+            <h2>Start your Kraken server and set DOA Data Format to Kraken App (default)</h2>
+            <p>This application is designed to augment Kraken software. It's also a way to use KrakenSDR with an iPhone (iTAK)</p>
+            <div class="line-item-kraken">
+            - Kraken Server IPv4 should be the IPv4 address of where you are running the KrakenSDR software.
+            </div>
+            <div class="line-item-tak">
+            - TAK Server IPv4 is the IP address of your TAK Server.
+            </div>
+            <div class="line-item-tak">
+            - TAK Server Port is the port you assigned on your TAK Server to be the input for this data.
+            </div>
+            <div class="line-item-tak">
+            - On/Off Multicast is enabled by default and it controls sending the position marker of the KrakenSDR and DOA Line to the TAK SA multicast default 239.2.3.1:6969.
+            </div>
+            <div class="line-item-ignore">
+            - DOA Ignore/Exclusion Range is a feature to not display DOA Lines if the DOA reading from the KrakenSDR is between the wedge you specify.
+            This is useful for situations with multiple transmitters.
+            </div>
+            <div class="line-item-persist">
+            - Persist DOA Line is disabled by default. If you enable the feature a new line will be created every time.
+            </div>
+        </div>
     </div>
-    <label for="persistDOALineButton">New line instead of a single line? Push this.</label>
-    <button id="persistDOALineButton" class="false-state">Persist DOA Line</button>
-
 </body>
 
 </html>

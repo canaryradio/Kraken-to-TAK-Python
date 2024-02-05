@@ -151,6 +151,11 @@ def update_settings():
         if 'takMulticast' in foobar:
             tak_multicast_state = foobar['takMulticast']
 
+        if 'start_angle' in foobar and 'end_angle' in foobar:
+            start_angle = foobar['start_angle']
+            end_angle = foobar['end_angle']
+            logging.info(f"Received DOA Ignore Range: {start_angle} to {end_angle}")
+
         return 'Settings updated successfully'
     except Exception as e:
         logging.error(f"Error updating settings: {e}")
@@ -217,16 +222,31 @@ if __name__ == "__main__":
                 longitude_kraken = float(data_parts[9])
                 max_doa_angle = float(data_parts[1])
 
-                second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
+                if 'start_angle' in foobar and 'end_angle' in foobar:
+                    start_angle = float(foobar['start_angle'])
+                    end_angle = float(foobar['end_angle'])
+                    if start_angle <= max_doa_angle <= end_angle:
+                        pass
+                    else:
+                        second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
+                        uid_line = 'DOA-to-TAK'
+                        cot_line_payload = create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line)
+                        send_cot_payload(cot_line_payload)
+                        
+                        if tak_multicast_state:
+                            send_to_multicast(cot_line_payload)
 
-                uid_line = 'DOA-to-TAK'
-                cot_line_payload = create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line)
+                else:
+                    second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
 
-                send_cot_payload(cot_line_payload)
+                    uid_line = 'DOA-to-TAK'
+                    cot_line_payload = create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line)
 
-                # Send to Multicast endpoint if takMulticast is True
-                if tak_multicast_state:
-                    send_to_multicast(cot_line_payload)
+                    send_cot_payload(cot_line_payload)
+
+                    # Send to Multicast endpoint if takMulticast is True
+                    if tak_multicast_state:
+                        send_to_multicast(cot_line_payload)
 
             except requests.RequestException as e:
                 logging.error(f"HTTP Request error: {e}")
