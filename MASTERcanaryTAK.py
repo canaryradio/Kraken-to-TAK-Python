@@ -149,7 +149,7 @@ def update_settings():
             tak_server_port = foobar['tak_server_port']
 
         if 'takMulticast' in foobar:
-            tak_multicast_state = foobar('takMulticast', tak_multicast_state)    
+            tak_multicast_state = foobar['takMulticast']
 
         return 'Settings updated successfully'
     except Exception as e:
@@ -170,7 +170,9 @@ if __name__ == "__main__":
 
     while True:
         logging.info('Kraken server:' + kraken_server)
-        logging.info('Tak Server:' + tak_server_ip + ':' + tak_server_port)
+        logging.info('Tak Server:' + tak_server_ip + ':' + tak_server_port)       
+        logging.info('Tak Multicast:' + str(tak_multicast_state))
+
         # Get GPS data
         latitude, longitude = get_gps_data()
 
@@ -201,7 +203,6 @@ if __name__ == "__main__":
 
 
             send_cot_payload(cot_xml_payload_point)
-
             # Send to Multicast endpoint if takMulticast is True
             if tak_multicast_state:
                 send_to_multicast(cot_xml_payload_point)
