@@ -138,11 +138,11 @@
             document.getElementById("persistDOALineButton").addEventListener("click", togglePersistDOALine);
 
             // TAK Multicast On/Off
-            document.addEventListener('DOMContentLoaded', function () {
-                // Initialize toggle state
-                var takMulticastToggle = true;
+            var takMulticastToggle = true;
+            var button = document.getElementById("takMulticastToggle");
+            button.addEventListener("click", function () {
+                takMulticastToggle = !takMulticastToggle;
                 // Set button class based on initial state
-                var button = document.getElementById("takMulticastToggle");
                 if (takMulticastToggle) {
                     button.classList.add("true-state");
                     button.classList.remove("false-state");
@@ -152,56 +152,17 @@
                     button.classList.remove("true-state");
                     button.innerHTML = "Not sending multicast";
                 }
+                        
+                fetch('/update_settings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ takMulticast: takMulticastToggle })
+                    })            
+            })
                 
-                // Function to toggle TAK Multicast
-                function toggleTAKMulticast() {
-                    var button = document.getElementById("takMulticast");
-                    takMulticastToggle = !takMulticastToggle;
-
-                    // Make an AJAX request to update the mesh_mode variable
-                    updateServerSettings(!takMulticastToggle, takMulticast, function () {
-                        if (!takMulticastToggle) {
-                            // Update button style for true state (green)
-                            button.classList.add("true-state");
-                            button.classList.remove("false-state");
-                            button.innerHTML = "Broadcasting to 239.2.3.1:6969";
-                        } else {
-                            // Update button style for false state (red)
-                            button.classList.add("false-state");
-                            button.classList.remove("true-state");
-                            button.innerHTML = "Not sending multicast";
-                        }
-
-                        // Alert outside the if-else block
-                        alert("Enable TAK Multicast set to: " + !takMulticastToggle + " in state: " + takMulticastToggle);
-                    });
-                }
-
-                // Function to make an AJAX request to update the server settings
-                function updateServerSettings(takMulticastToggle, takMulticast, callback) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "/update_settings", true);
-                    xhr.setRequestHeader("Content-Type", "application/json");
-
-                    // Create JSON object with updated settings
-                    var settings = {
-                        takMulticast: takMulticastToggle,
-                    };
-
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState == 4 && xhr.status == 200) {
-                            console.log("Settings updated successfully");
-                            callback();
-                        }
-                    };
-
-                    // Send the JSON object as the request payload
-                    xhr.send(JSON.stringify(settings));
-                }
-
-                // Event listener for TAK Multicast button
-                document.getElementById("takMulticastToggle").addEventListener("click", toggleTAKMulticast);
-            });
+            
 
             // Event listener for Save Kraken Server button
             document.getElementById("saveKrakenServerButton").addEventListener("click", function () {
