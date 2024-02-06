@@ -134,32 +134,69 @@
             // Initialize toggle state
             var persistDOALineToggle = false;
             var uid_line = 'DOA-to-TAK';
+            var intervalId;
 
             // Function to toggle the persist DOA Line state
             function togglePersistDOALine() {
                 var button = document.getElementById("persistDOALineButton");
-                var uidLineSuffix = parseInt(uid_line.split('-')[1] || 0) + 1;
-                var updatedUid_line = 'DOA-to-TAK-' + uidLineSuffix;
 
-                // Make an AJAX request to update the uid_line variable
-                updateServerSettings(!persistDOALineToggle, updatedUid_line, function () {
-                    if (!persistDOALineToggle) {
-                        // Update button style for true state (green)
-                        button.classList.add("true-state");
-                        button.classList.remove("false-state");
-                        button.innerHTML = "Persisting DOA Lines";
-                    } else {
-                        // Update button style for false state (red)
-                        button.classList.add("false-state");
-                        button.classList.remove("true-state");
-                        button.innerHTML = "Persist DOA Line";
-                    }
+                if (!persistDOALineToggle) {
+                    // Start sending UID every 1 second
+                    intervalId = setInterval(function () {
+                        var updatedUid_line = 'DOA-to-TAK-' + generateRandomNumber();
+                        updateServerSettings(true, updatedUid_line, function () {
+                            // Update button style for true state (green)
+                            updateButtonStyle(button, true);
+                        });
+                    }, 1000);
+                } else {
+                    // Stop sending UID when in false state
+                    clearInterval(intervalId);
 
-                    // Alert outside the if-else block
-                    alert("Persist DOA Line set to: " + !persistDOALineToggle + " with UID: " + updatedUid_line);
-                });
+                    // Update button style for false state (red)
+                    updateServerSettings(false, '', function () {
+                        updateButtonStyle(button, false);
+                    });
+                }
+                persistDOALineToggle = !persistDOALineToggle;
             }
 
+            // Function to toggle the persist DOA Line state
+            function togglePersistDOALine() {
+                var button = document.getElementById("persistDOALineButton");
+
+                if (!persistDOALineToggle) {
+                    // Make an AJAX request to update the uid_line variable
+                    var updatedUid_line = 'DOA-to-TAK-' + generateRandomNumber();
+                    updateServerSettings(true, updatedUid_line, function () {
+                        // Update button style for true state (green)
+                        updateButtonStyle(button, true);
+                    });
+                } else {
+                        // Update button style for false state (red)
+                        updateServerSettings(false, '', function () {
+                            updateButtonStyle(button, false);
+                    });
+                }
+                persistDOALineToggle = !persistDOALineToggle;
+            }
+            // Function to generate a random number (customize as needed)
+            function generateRandomNumber() {
+                return Math.floor(Math.random() * 1000);
+            }
+            
+            // Function to update button style based on state
+            function updateButtonStyle(button, isTrueState) {
+                if (isTrueState) {
+                    button.classList.remove("false-state");
+                    button.classList.add("true-state");
+                    button.innerHTML = "Persisting DOA Lines";
+                } else {
+                    button.classList.remove("true-state");
+                    button.classList.add("false-state");
+                    button.innerHTML = "Persist DOA Line";
+                }
+            }
             // Function to make an AJAX request to update the server settings
             function updateServerSettings(persistDOALineToggle, uid_line, callback) {
                 var xhr = new XMLHttpRequest();
@@ -173,9 +210,13 @@
                 };
 
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        console.log("Settings updated successfully");
-                        callback();
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            console.log("Settings updated successfully");
+                            callback();
+                        } else {
+                            console.error("Error updating settings. Status: " + xhr.status);
+                        }
                     }
                 };
 

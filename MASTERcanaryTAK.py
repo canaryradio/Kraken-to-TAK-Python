@@ -180,6 +180,7 @@ if __name__ == "__main__":
         logging.info('Kraken server:' + kraken_server)
         logging.info('Tak Server:' + tak_server_ip + ':' + tak_server_port)       
         logging.info('Tak Multicast:' + str(tak_multicast_state))
+        logging.info('Line UID:' + str(uid_line))
 
         # Get GPS data
         latitude, longitude = get_gps_data()
