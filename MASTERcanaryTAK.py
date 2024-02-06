@@ -19,7 +19,8 @@ tak_multicast_state = True
 default_hae = 999999
 default_ce = 35.0
 default_le = 999999
-foobar = {}
+start_angle = None
+end_angle = None
 
 
 # Function to query kraken Server
@@ -135,7 +136,7 @@ def update_settings():
         foobar = request.get_json()
         logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
-        global uid_line, kraken_server, tak_server_ip, tak_server_port, tak_multicast_state
+        global uid_line, kraken_server, tak_server_ip, tak_server_port, tak_multicast_state, start_angle, end_angle
         uid_line = request.form.get('uid_line')
         
         if 'uid_line' in foobar:
@@ -154,8 +155,8 @@ def update_settings():
             tak_multicast_state = foobar['takMulticast']
 
         if 'start_angle' in foobar and 'end_angle' in foobar:
-            start_angle = foobar['start_angle']
-            end_angle = foobar['end_angle']
+            start_angle = float(foobar['start_angle'])
+            end_angle = float(foobar['end_angle'])
             logging.info(f"Received DOA Ignore Range: {start_angle} to {end_angle}")
             return jsonify({"message": "DOA Ignore Range saved successfully"}), 200
 
@@ -181,7 +182,6 @@ if __name__ == "__main__":
         logging.info('Tak Server:' + tak_server_ip + ':' + tak_server_port)       
         logging.info('Tak Multicast:' + str(tak_multicast_state))
         logging.info('Line UID:' + str(uid_line))
-
         # Get GPS data
         latitude, longitude = get_gps_data()
 
@@ -228,9 +228,7 @@ if __name__ == "__main__":
 
                 logging.info(f"max_doa_angle: {max_doa_angle}")
 
-                if 'start_angle' in foobar and 'end_angle' in foobar and foobar['start_angle'] is not None and foobar['end_angle'] is not None:
-                    start_angle = float(foobar['start_angle'])
-                    end_angle = float(foobar['end_angle'])
+                if start_angle is not None and end_angle is not None:
                     if start_angle <= max_doa_angle <= end_angle:
                         logging.info(f"start_angle: {start_angle}, end_angle: {end_angle}, max_doa_angle: {max_doa_angle}")
                     else:
