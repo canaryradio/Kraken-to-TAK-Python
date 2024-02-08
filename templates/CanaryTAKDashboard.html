@@ -132,59 +132,17 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Initialize toggle state
-            var persistDOALineToggle = false;
-            var uid_line = 'DOA-to-TAK';
-            var intervalId;
+            var persist_uid_line = false;
 
             // Function to toggle the persist DOA Line state
             function togglePersistDOALine() {
                 var button = document.getElementById("persistDOALineButton");
-
-                if (!persistDOALineToggle) {
-                    // Start sending UID every 1 second
-                    intervalId = setInterval(function () {
-                        var updatedUid_line = 'DOA-to-TAK-' + generateRandomNumber();
-                        updateServerSettings(true, updatedUid_line, function () {
-                            // Update button style for true state (green)
-                            updateButtonStyle(button, true);
-                        });
-                    }, 1000);
-                } else {
-                    // Stop sending UID when in false state
-                    clearInterval(intervalId);
-
-                    // Update button style for false state (red)
-                    updateServerSettings(false, '', function () {
-                        updateButtonStyle(button, false);
-                    });
-                }
-                persistDOALineToggle = !persistDOALineToggle;
+                persist_uid_line = !persist_uid_line;
+                updateServerSettings(persist_uid_line, function () {
+                    updateButtonStyle(button, persist_uid_line);
+                });
             }
 
-            // Function to toggle the persist DOA Line state
-            function togglePersistDOALine() {
-                var button = document.getElementById("persistDOALineButton");
-
-                if (!persistDOALineToggle) {
-                    // Make an AJAX request to update the uid_line variable
-                    var updatedUid_line = 'DOA-to-TAK-' + generateRandomNumber();
-                    updateServerSettings(true, updatedUid_line, function () {
-                        // Update button style for true state (green)
-                        updateButtonStyle(button, true);
-                    });
-                } else {
-                        // Update button style for false state (red)
-                        updateServerSettings(false, '', function () {
-                            updateButtonStyle(button, false);
-                    });
-                }
-                persistDOALineToggle = !persistDOALineToggle;
-            }
-            // Function to generate a random number (customize as needed)
-            function generateRandomNumber() {
-                return Math.floor(Math.random() * 1000);
-            }
-            
             // Function to update button style based on state
             function updateButtonStyle(button, isTrueState) {
                 if (isTrueState) {
@@ -198,15 +156,14 @@
                 }
             }
             // Function to make an AJAX request to update the server settings
-            function updateServerSettings(persistDOALineToggle, uid_line, callback) {
+            function updateServerSettings(persist_uid_line, callback) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/update_settings", true);
                 xhr.setRequestHeader("Content-Type", "application/json");
 
                 // Create JSON object with updated settings
                 var settings = {
-                    persist_doa_line: persistDOALineToggle,
-                    uid_line: uid_line
+                    persist_uid_line: persist_uid_line,
                 };
 
                 xhr.onreadystatechange = function () {
