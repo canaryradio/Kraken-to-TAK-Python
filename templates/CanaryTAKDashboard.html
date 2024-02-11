@@ -270,6 +270,7 @@
             // Event listener for Save TAK Server IP and Port button
             document.getElementById("saveTAKServerButton").addEventListener("click", saveTakStuff);
 
+            
             // New function to save DOA Ignore Range
             function saveDOAIgnoreRange() {
                 var startAngle = document.getElementById("startAngle").value;
@@ -307,6 +308,33 @@
 
             // Event listener for the Save DOA Ignore Range button
             document.getElementById("saveDOAIgnoreRangeButton").addEventListener("click", saveDOAIgnoreRange);
+        
+            // Event listener for the Reset button
+            document.getElementById("resetButton").addEventListener("click", resetForm);
+
+            // Function to reset the form
+        function resetForm() {
+            // Clear input fields
+            document.getElementById("startAngle").value = "";
+            document.getElementById("endAngle").value = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/update_settings", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            var data = {
+                start_angle: 0,
+                end_angle: 0
+            };
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    alert("Settings reset successfully!");
+                } else {
+                    alert("Error resetting settings.");
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
+        
         });
     </script>
 </head>
@@ -344,6 +372,7 @@
                 <input type="number" id="endAngle" min="0" max="359" required placeholder="Moving clockwise 0-359">
 
                 <button id="saveDOAIgnoreRangeButton" type="button">Save</button>
+                <button id="resetButton" type="button">Reset</button>
             </form>
         </div>
 

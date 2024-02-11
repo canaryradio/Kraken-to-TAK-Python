@@ -168,6 +168,33 @@ def update_settings():
         logging.error(f"Error updating settings: {e}")
         return 'Failed to update settings'
 
+def evaluate_angle_range(start_angle, end_angle, max_doa_angle):
+    if start_angle is not None and end_angle is not None:
+        # Convert strings to integers, and ensure they are between 0 and 359
+        start_angle = int(start_angle) % 360
+        end_angle = int(end_angle) % 360
+        max_doa_angle = int(max_doa_angle) % 360
+
+        if start_angle <= end_angle:
+            # Case where end_angle is greater than or equal to start_angle
+            if start_angle <= max_doa_angle <= end_angle:
+                print("max doa angle between exclusion wedge.")
+                return False
+            else:
+                print("sending payloads")
+                return True
+        else:
+            # Case where end_angle wraps around to less than start_angle
+            if start_angle <= max_doa_angle or max_doa_angle <= end_angle:
+                print("max doa angle between exclusion wedge.")
+                return False
+            else:
+                print("sending payloads")
+                return True
+    else:
+        print("No DOA Ignore wedge set")
+        return True
+
 def run_flask():
     if __name__ == '__main__':
         app.run(host='0.0.0.0', port=8000)
@@ -235,19 +262,17 @@ if __name__ == "__main__":
                     uid_line = generate_uid_line()
                 else:
                     uid_line = 'DOA-to-TAK'
+
                 if start_angle is not None and end_angle is not None:
-                    if start_angle <= max_doa_angle <= end_angle:
-                        logging.info(f"start_angle: {start_angle}, end_angle: {end_angle}, max_doa_angle: {max_doa_angle}")
-                    else:
-                        logging.info(f"Condition not met. start_angle: {start_angle}, end_angle: {end_angle}, max_doa_angle: {max_doa_angle}")
+                    if evaluate_angle_range(start_angle, end_angle, max_doa_angle):
+                        logging.info("Sending payloads")
                         second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
-                        
                         cot_line_payload = create_cot_xml_payload_line(latitude_kraken, longitude_kraken, second_point, uid_line)
                         send_cot_payload(cot_line_payload)
-                        
                         if tak_multicast_state:
                             send_to_multicast(cot_line_payload)
-
+                    else:
+                        logging.info("Not sending payloads")
                 else:
                     logging.info(f"No DOA Ignore wedge set")
                     second_point = calculate_second_point(latitude_kraken, longitude_kraken, max_doa_angle, 6)
