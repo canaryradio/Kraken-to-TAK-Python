@@ -11,7 +11,8 @@ Step 2:
 Initialize or start your KrakenSDR software (this can be done after starting Kraken to TAK also)
 
 Step 3:
-Navigate to the directory and start with $ python kraken-to-TAK
+Navigate to the directory and start with 
+```$ python kraken-to-TAK```
 
 Step 4:
 Open a browser and navigate to http://<YOUR_IP:8000
