@@ -16,7 +16,7 @@ Navigate to the directory and start with $ python kraken-to-TAK
 Step 4:
 Open a browser and navigate to http://<YOUR_IP:8000
 
-''''
+```
 -Kraken Server IP should be the IPv4 of the computer that your KrakenSDR software is running on
 <img width="325" alt="Screenshot 2024-02-11 at 5 06 51 PM" src="https://github.com/canaryradio/Kraken-to-TAK-Python/assets/127666889/a57aa025-4e57-4522-a30e-1ae678b5a072">
 
@@ -30,4 +30,4 @@ Open a browser and navigate to http://<YOUR_IP:8000
 
 -Persist DOA Line will randomize the UID of the Line XML payload which will create a new line for each DOA bearing instead of overwriting the same line
 <img width="330" alt="Screenshot 2024-02-11 at 5 11 29 PM" src="https://github.com/canaryradio/Kraken-to-TAK-Python/assets/127666889/1a7231f5-586b-49fe-89b5-749bdfb1fd35">
-''''
+```
