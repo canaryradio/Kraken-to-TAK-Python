@@ -11,7 +11,7 @@ Step 2:
 Initialize or start your KrakenSDR software (this can be done after starting Kraken to TAK also)
 
 Step 3:
-Navigate to the directory and start with 
+Navigate to the directory and start
 ```
 $ cd Kraken-to-TAK-Python
 $ python KrakenToTAK.py
