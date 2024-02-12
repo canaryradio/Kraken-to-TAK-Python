@@ -4,6 +4,7 @@ Defaults are set to be run on the same server as your KrakenSDR server, however 
 
 Tested using Python and Python 3 with a Chrome browser.
 # Quick Start
+https://www.youtube.com/watch?v=AjJOk-vhxMA
 Step 1:
 Clone or download Kraken-to-TAK-Python to your computer
 
