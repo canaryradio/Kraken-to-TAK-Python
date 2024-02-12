@@ -1,4 +1,4 @@
-A Python application with a html dashboard designed to help use your KrakenSDR with TAK products.
+A Python application with html dashboard designed to help use your KrakenSDR with TAK products.
 Designed for use in a non-production environment.
 Defaults are set to be run on the same server as your KrakenSDR server, however other network configurations should work.
 
