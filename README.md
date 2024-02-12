@@ -5,14 +5,17 @@ Defaults are set to be run on the same server as your KrakenSDR server, however 
 Tested using Python and Python 3 with a Chrome browser.
 
 Step 1:
-Clone or download to your computer
+Clone or download Kraken-to-TAK-Python to your computer
 
 Step 2:
 Initialize or start your KrakenSDR software (this can be done after starting Kraken to TAK also)
 
 Step 3:
 Navigate to the directory and start with 
-```$ python KrakenToTAK.py```
+```
+$ cd Kraken-to-TAK-Python
+$ python KrakenToTAK.py
+```
 
 Step 4:
 Open a browser and navigate to http://<YOUR_IP:8000
