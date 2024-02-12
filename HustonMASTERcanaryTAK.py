@@ -61,6 +61,8 @@ def send_to_multicast(cot_xml_payload_multicast):
     except socket.error as e:
         logging.error(f"Socket error: {e}")
 
+import requests  # Import requests module
+
 # Function to get GPS data
 def get_gps_data():
     try:
@@ -68,16 +70,35 @@ def get_gps_data():
         packet = gpsd.get_current()
         latitude = getattr(packet, 'lat', None)
         longitude = getattr(packet, 'lon', None)
-        return latitude, longitude
-    except socket.error as se:
-        logging.warning(f"Socket error connecting to GPSD: {se}")
-        return None, None
-    except gpsd.NoFixError:
-        logging.warning("No GPS fix available")
-        return None, None
+
+        # If GPSD data is available, return it
+        if latitude is not None and longitude is not None:
+            return latitude, longitude
+        
     except Exception as e:
-        logging.error(f"Error getting GPS data: {e}")
-        return None, None
+        # Log any errors encountered while connecting to GPSD
+        logging.error(f"Error connecting to GPSD: {e}")
+
+    # If GPSD is not available or encountered an error, use alternate source (if available)
+    try:
+        # Fetch data from Kraken server
+        kraken_response = requests.get(url(kraken_server))
+        kraken_data = kraken_response.text
+
+        # Split the data and extract latitude and longitude
+        data_parts = kraken_data.split(',')
+        latitude_kraken = float(data_parts[8])
+        longitude_kraken = float(data_parts[9])
+        
+        # If alternate source data is available, return it
+        return latitude_kraken, longitude_kraken
+    
+    except Exception as e:
+        # Log any errors encountered while using alternate source
+        logging.error(f"Error using alternate source for GPS data: {e}")
+
+    # If both GPSD and alternate source fail, return None
+    return None, None
 
 # Function to create CoT XML payload for point feature
 def create_cot_xml_payload_point(latitude, longitude, callsign, endpoint, phone, uid, group_name, group_role, geopointsrc, altsrc, battery, device, platform, os, version, speed, course):
