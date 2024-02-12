@@ -3,7 +3,7 @@ For use in a non-production environment.
 Defaults are set to be run on the same server as your KrakenSDR server, however other network configurations should work.
 
 Tested using Python and Python 3 with a Chrome browser.
-
+# Quick Start
 Step 1:
 Clone or download Kraken-to-TAK-Python to your computer
 
@@ -20,7 +20,7 @@ $ python KrakenToTAK.py
 Step 4:
 Open a browser and navigate to http://<YOUR_IP:8000
 
-# Quick Start
+# Instructions
 Kraken Server
 	-Kraken Server IP should be the IPv4 of the computer that your KrakenSDR software is running on.
 <img width="325" alt="Screenshot 2024-02-11 at 5 06 51 PM" src="https://github.com/canaryradio/Kraken-to-TAK-Python/assets/127666889/a57aa025-4e57-4522-a30e-1ae678b5a072">
