@@ -13,6 +13,7 @@ from threading import Thread
 app = Flask(__name__)
 
 kraken_server = '0.0.0.0'
+kraken_station = '1'
 tak_server_ip = '0.0.0.0'
 tak_server_port = '6666'
 tak_multicast_state = True
@@ -103,7 +104,7 @@ def get_gps_data():
 # Function to create CoT XML payload for point feature
 def create_cot_xml_payload_point(latitude, longitude, callsign, endpoint, phone, uid, group_name, group_role, geopointsrc, altsrc, battery, device, platform, os, version, speed, course):
     return f'''<?xml version="1.0"?>
-    <event version="2.0" uid="{uid}" type="a-f-G-U-C"
+    <event version="2.0" uid="{kraken_station}-{uid}" type="a-f-G-U-C"
     time="{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}"
     start="{datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.995Z')}"
     stale="{(datetime.datetime.utcnow() + datetime.timedelta(seconds=75)).strftime('%Y-%m-%dT%H:%M:%S.995Z')}"
@@ -161,13 +162,16 @@ def update_settings():
         foobar = request.get_json()
         logging.info(f"Received settings: {foobar}")
         # Extract parameters from the POST request
-        global persist_uid_line, kraken_server, tak_server_ip, tak_server_port, tak_multicast_state, start_angle, end_angle
+        global persist_uid_line, kraken_server, kraken_station, tak_server_ip, tak_server_port, tak_multicast_state, start_angle, end_angle
         
         if 'persist_uid_line' in foobar:
             persist_uid_line = foobar['persist_uid_line']
         
         if 'kraken_server' in foobar:
             kraken_server = foobar['kraken_server']
+
+        if 'kraken_station' in foobar:
+            kraken_station = foobar['kraken_station']
         
         if 'tak_server_ip' in foobar:
             tak_server_ip = foobar['tak_server_ip']
@@ -241,7 +245,7 @@ if __name__ == "__main__":
             callsign_point = "Kraken Spot"
             endpoint_point = ""
             phone_point = ""
-            uid_point = "SignalMedic"
+            uid_point = f"{kraken_station}-SignalMedic"
             group_name_point = "Yellow"
             group_role_point = "Team Member"
             geopointsrc_point = "GPS"
@@ -282,7 +286,7 @@ if __name__ == "__main__":
                 if persist_uid_line is True:
                     uid_line = generate_uid_line()
                 else:
-                    uid_line = 'DOA-to-TAK'
+                    uid_line = f'{kraken_station}-DOA-to-TAK'
 
                 if start_angle is not None and end_angle is not None:
                     if evaluate_angle_range(start_angle, end_angle, max_doa_angle):

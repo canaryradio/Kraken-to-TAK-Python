@@ -114,8 +114,12 @@
         }
 
         .line-item-kraken {
-            margin-bottom: 100px;
-            margin-top: 40px;
+            margin-bottom: 10px;
+            margin-top: 30px;
+        }
+        .line-item-kraken-station {
+            margin-bottom: 80px;
+            margin-top: 10px;
         }
         .line-item-tak {
             margin-bottom: 20px;
@@ -125,7 +129,7 @@
             margin-bottom: 40px;
         }
         .line-item-persist {
-            margin-top: 180px;
+            margin-top: 170px;
             margin-bottom: 10px;
         }
     </style>
@@ -212,14 +216,18 @@
             // Event listener for Save Kraken Server button
             document.getElementById("saveKrakenServerButton").addEventListener("click", function () {
                 var newKrakenServer = document.getElementById("krakenServerInput").value;
-                if (newKrakenServer.trim() !== "") {  // Trim to handle potential extra whitespaces
+                var newKrakenStation = document.getElementById("krakenStation").value; // Get Kraken Station ID value
+                if (newKrakenServer.trim() !== "" && newKrakenStation.trim() !== "") {  // Trim to handle potential extra whitespaces
                     // Ensure correct route, method, and JSON format for your specific server-side implementation
                     fetch('/update_settings', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ kraken_server: newKrakenServer })
+                        body: JSON.stringify({ 
+                            kraken_server: newKrakenServer,
+                            kraken_station: newKrakenStation // Add Kraken Station ID to the JSON payload
+                        })
                     })
                         .then(response => response.text())
                         .then(data => {
@@ -228,9 +236,9 @@
                         .catch(error => {
                             console.error('Error:', error);
                         });
-                    alert("Kraken Server updated successfully!");
+                    alert("Kraken Server and Station ID updated successfully!");
                 } else {
-                    alert("Please enter a valid Kraken Server address.");
+                    alert("Please enter a valid Kraken Server address and Station ID.");
                 }
             });
 
@@ -347,6 +355,8 @@
         <div class="group-container">
             <label for="krakenServerInput">Kraken Server IPv4:</label>
             <input type="text" id="krakenServerInput" placeholder="Default 0.0.0.0">
+            <label for="krakenStation">Kraken Station ID:</label>
+            <input type="text" id="krakenStation" placeholder="Default 1">
             <button id="saveKrakenServerButton">Save</button>
         </div>
 
@@ -387,6 +397,9 @@
             <p>This application is designed to augment Kraken software. It's also a way to use KrakenSDR with an iPhone (iTAK)</p>
             <div class="line-item-kraken">
             - Kraken Server IPv4 should be the IPv4 address of where you are running the KrakenSDR software.
+            </div>
+            <div class="line-item-kraken-station">
+            - Assign a number or name for each Kraken Station to ensure it recieves a unique identifier.
             </div>
             <div class="line-item-tak">
             - TAK Server IPv4 is the IP address of your TAK Server.
