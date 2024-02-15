@@ -23,7 +23,7 @@ Open a browser and navigate to http://<YOUR_IP:8000
 https://www.youtube.com/watch?v=AjJOk-vhxMA
 # Instructions
 Kraken Server
-	-Kraken Server IP should be the IPv4 of the computer that your KrakenSDR software is running on.
+	-Kraken Server IP should be the IPv4 of the computer that your KrakenSDR software is running on. The Kraken Station ID is for situations with multiple KrakenSDR radios.
 <img width="325" alt="Screenshot 2024-02-11 at 5 06 51 PM" src="https://github.com/canaryradio/Kraken-to-TAK-Python/assets/127666889/a57aa025-4e57-4522-a30e-1ae678b5a072">
 
 TAK Server
