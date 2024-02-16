@@ -24,7 +24,8 @@ https://www.youtube.com/watch?v=AjJOk-vhxMA
 # Instructions
 Kraken Server
 	-Kraken Server IP should be the IPv4 of the computer that your KrakenSDR software is running on. The Kraken Station ID is for situations with multiple KrakenSDR radios.
-<img width="325" alt="Screenshot 2024-02-11 at 5 06 51 PM" src="https://github.com/canaryradio/Kraken-to-TAK-Python/assets/127666889/a57aa025-4e57-4522-a30e-1ae678b5a072">
+
+ <img width="333" alt="Screenshot 2024-02-15 at 8 59 32 PM" src="https://github.com/canaryradio/Kraken-to-TAK-Python/assets/127666889/1e5baa8e-ec39-444d-aaa5-5aae9b0979f2">
 
 TAK Server
 	-TAK Server IP should be the IPv4 of your TAK Server. TAK Server Port should be the port you assigned for the Kraken input. TAK Multicast will enable and disable sending Kraken packets to the multicast default for TAK clients
