@@ -1,3 +1,9 @@
+KrakenSDR Raspberry Pi 4 image quickstart (this image requires a couple commands to set the environment up)
+https://www.youtube.com/watch?v=3kVVMPc3WTc
+
+Example
+https://www.youtube.com/watch?v=AjJOk-vhxMA
+
 A Python application with html dashboard designed to help use your KrakenSDR with TAK products.
 For use in a non-production environment.
 Defaults are set to be run on the same server as your KrakenSDR server, however other network configurations should work.
@@ -20,7 +26,6 @@ $ python KrakenToTAK.py
 Step 4:
 Open a browser and navigate to http://<YOUR_IP:8000
 
-https://www.youtube.com/watch?v=AjJOk-vhxMA
 # Instructions
 Kraken Server
 	-Kraken Server IP should be the IPv4 of the computer that your KrakenSDR software is running on. The Kraken Station ID is for situations with multiple KrakenSDR radios.
