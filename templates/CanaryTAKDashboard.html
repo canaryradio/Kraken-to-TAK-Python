@@ -26,7 +26,6 @@
             min-height: 100vh;
         }
 
-        /* ── Header ── */
         header {
             display: flex;
             align-items: baseline;
@@ -36,31 +35,19 @@
             margin-bottom: 20px;
         }
 
-        header h1 {
-            font-size: 22px;
-            font-weight: bold;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-        }
+        header h1 { font-size: 22px; font-weight: bold; letter-spacing: 6px; text-transform: uppercase; }
+        header .subtitle { font-size: 10px; letter-spacing: 3px; color: var(--yellow-dim); }
 
-        header .subtitle {
-            font-size: 10px;
-            letter-spacing: 3px;
-            color: var(--yellow-dim);
-        }
-
-        /* ── Layout ── */
         .main-grid {
             display: grid;
-            grid-template-columns: 340px 1fr;
+            grid-template-columns: 360px 1fr;
             gap: 16px;
             align-items: start;
         }
 
-        .left-col { display: flex; flex-direction: column; gap: 12px; }
+        .left-col  { display: flex; flex-direction: column; gap: 12px; }
         .right-col { display: flex; flex-direction: column; gap: 12px; }
 
-        /* ── Cards ── */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--yellow-dim);
@@ -75,9 +62,19 @@
             border-bottom: 1px solid var(--yellow-faint);
             padding-bottom: 10px;
             margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        /* ── Form elements ── */
+        .card-title-badge {
+            font-size: 9px;
+            letter-spacing: 2px;
+            padding: 2px 7px;
+            border: 1px solid;
+            border-radius: 2px;
+        }
+
         label {
             display: block;
             font-size: 10px;
@@ -105,13 +102,8 @@
 
         input:focus { border-color: var(--yellow); }
 
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        /* ── Buttons ── */
         .btn {
             font-family: inherit;
             font-size: 10px;
@@ -126,28 +118,18 @@
             transition: background 0.15s, border-color 0.15s;
         }
 
-        .btn:hover {
-            background: var(--yellow-faint);
-            border-color: var(--yellow);
-        }
+        .btn:hover { background: var(--yellow-faint); border-color: var(--yellow); }
 
-        .btn-save {
-            border-color: rgba(68, 255, 136, 0.5);
-            color: var(--green);
-        }
+        .btn-save  { border-color: rgba(68,255,136,0.5); color: var(--green); }
+        .btn-save:hover { background: rgba(68,255,136,0.08); border-color: var(--green); }
 
-        .btn-save:hover {
-            background: rgba(68, 255, 136, 0.08);
-            border-color: var(--green);
-        }
+        .btn-remove { border-color: rgba(255,68,68,0.4); color: var(--red); padding: 4px 10px; font-size: 9px; margin-top: 0; }
+        .btn-remove:hover { background: rgba(255,68,68,0.08); border-color: var(--red); }
 
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
+        .btn-configure { padding: 4px 10px; font-size: 9px; margin-top: 0; }
 
-        /* ── Toggle buttons ── */
+        .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+
         .toggle-btn {
             width: 100%;
             font-family: inherit;
@@ -165,33 +147,61 @@
             transition: background 0.15s;
         }
 
-        .toggle-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            flex-shrink: 0;
-        }
-
+        .toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
         .toggle-btn.on  { border-color: var(--green); color: var(--green); }
         .toggle-btn.off { border-color: var(--red);   color: var(--red);   }
-        .toggle-btn.on:hover  { background: rgba(68, 255, 136, 0.08); }
-        .toggle-btn.off:hover { background: rgba(255, 68, 68, 0.08);  }
+        .toggle-btn.on:hover  { background: rgba(68,255,136,0.08); }
+        .toggle-btn.off:hover { background: rgba(255,68,68,0.08);  }
+
+        /* ── Server list ── */
+        .server-list { display: flex; flex-direction: column; }
+
+        .server-entry {
+            border-bottom: 1px solid var(--yellow-faint);
+        }
+
+        .server-entry:last-child { border-bottom: none; }
+
+        .server-entry-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .server-color-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+        .server-entry-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .server-entry-ip   { font-size: 13px; }
+        .server-entry-station { font-size: 10px; letter-spacing: 2px; color: var(--yellow-dim); text-transform: uppercase; }
+
+        .server-entry-actions { display: flex; gap: 6px; align-items: center; }
+
+        /* Per-server settings panel (hidden by default) */
+        .server-config-panel {
+            display: none;
+            padding: 12px 0 14px 16px;
+            border-left: 2px solid var(--yellow-faint);
+            margin-left: 4px;
+            margin-bottom: 4px;
+        }
+
+        .server-config-panel.open { display: block; }
+
+        .server-add {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--yellow-faint);
+        }
+
+        .server-add label:first-of-type { margin-top: 0; }
+
+        .no-servers { font-size: 11px; color: var(--yellow-dim); padding: 8px 0; }
 
         /* ── Compass ── */
-        #compassCanvas {
-            display: block;
-            width: 100%;
-            margin-top: 4px;
-        }
+        #compassCanvas { display: block; width: 100%; margin-top: 4px; }
 
-        .compass-label {
-            text-align: center;
-            font-size: 10px;
-            color: var(--yellow-dim);
-            letter-spacing: 2px;
-            margin-top: 6px;
-        }
+        .compass-label { text-align: center; font-size: 10px; color: var(--yellow-dim); letter-spacing: 2px; margin-top: 6px; }
 
         /* ── Status panel ── */
         .status-row {
@@ -205,60 +215,38 @@
 
         .status-row:last-child { border-bottom: none; }
 
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            background: #333;
-        }
-
-        .status-indicator.ok  { background: var(--green); box-shadow: 0 0 6px var(--green); }
-        .status-indicator.err { background: var(--red);   box-shadow: 0 0 6px var(--red);   }
+        .status-indicator { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: #333; }
+        .status-indicator.ok   { background: var(--green);  box-shadow: 0 0 6px var(--green); }
+        .status-indicator.err  { background: var(--red);    box-shadow: 0 0 6px var(--red); }
         .status-indicator.warn { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
 
-        .status-key {
-            font-size: 10px;
-            letter-spacing: 2px;
-            color: var(--yellow-dim);
-            width: 70px;
-            flex-shrink: 0;
-        }
-
+        .status-key { font-size: 10px; letter-spacing: 2px; color: var(--yellow-dim); width: 70px; flex-shrink: 0; }
         .status-val { color: var(--yellow); }
         .status-val.dim { color: var(--yellow-dim); }
 
-        #statusAge {
-            float: right;
-            font-size: 10px;
-            color: var(--yellow-dim);
+        #statusAge { float: right; font-size: 10px; color: var(--yellow-dim); }
+
+        .status-section-sep {
+            height: 1px;
+            background: var(--yellow-faint);
+            margin: 4px 0;
         }
 
-        /* ── Toast notifications ── */
+        /* ── Toast ── */
         .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 8px; pointer-events: none;
         }
 
         .toast {
-            background: #1a1a1a;
-            border: 1px solid;
-            padding: 10px 16px;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            min-width: 240px;
+            background: #1a1a1a; border: 1px solid;
+            padding: 10px 16px; font-size: 11px; letter-spacing: 2px;
+            text-transform: uppercase; min-width: 240px;
             animation: toastIn 3.5s forwards;
         }
 
         .toast.success { border-color: var(--green); color: var(--green); }
-        .toast.error   { border-color: var(--red);   color: var(--red);   }
+        .toast.error   { border-color: var(--red);   color: var(--red); }
         .toast.info    { border-color: var(--yellow); color: var(--yellow); }
 
         @keyframes toastIn {
@@ -268,10 +256,7 @@
             100% { opacity: 0; }
         }
 
-        /* ── Responsive ── */
-        @media (max-width: 720px) {
-            .main-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 720px) { .main-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -283,18 +268,23 @@
 
     <div class="main-grid">
 
-        <!-- ══ LEFT COLUMN: Settings ══ -->
+        <!-- ══ LEFT COLUMN ══ -->
         <div class="left-col">
 
-            <!-- Kraken Server -->
+            <!-- Kraken Servers -->
             <div class="card">
-                <div class="card-title">Kraken Server</div>
-                <label for="krakenServerInput">Server IPv4</label>
-                <input type="text" id="krakenServerInput" placeholder="0.0.0.0">
-                <label for="krakenStation">Station ID</label>
-                <input type="text" id="krakenStation" placeholder="1">
-                <div class="btn-row">
-                    <button class="btn btn-save" id="saveKrakenServerButton">Save</button>
+                <div class="card-title">Kraken Servers</div>
+                <div class="server-list" id="serverList">
+                    <p class="no-servers">Loading&hellip;</p>
+                </div>
+                <div class="server-add">
+                    <label for="newServerIp">Server IPv4</label>
+                    <input type="text" id="newServerIp" placeholder="0.0.0.0">
+                    <label for="newServerStation">Station ID</label>
+                    <input type="text" id="newServerStation" placeholder="1">
+                    <div class="btn-row">
+                        <button class="btn btn-save" id="addServerButton">Add Server</button>
+                    </div>
                 </div>
             </div>
 
@@ -314,47 +304,63 @@
                 </button>
             </div>
 
-            <!-- DOA Exclusion Range -->
-            <div class="card">
-                <div class="card-title">DOA Exclusion Range</div>
-                <canvas id="compassCanvas"></canvas>
-                <p class="compass-label" id="compassLabel">No exclusion set &mdash; all bearings active</p>
-                <div class="input-row" style="margin-top: 14px;">
-                    <div>
-                        <label for="startAngle">Start &deg;</label>
-                        <input type="number" id="startAngle" min="0" max="359" placeholder="0">
-                    </div>
-                    <div>
-                        <label for="endAngle">End &deg;</label>
-                        <input type="number" id="endAngle" min="0" max="359" placeholder="359">
-                    </div>
+            <!-- Per-server settings (DOA Exclusion + Persist + Line) -->
+            <!-- Rendered inside the compass card, scoped to selected server -->
+            <div class="card" id="serverSettingsCard">
+                <div class="card-title">
+                    <span>Station Settings</span>
+                    <span class="card-title-badge" id="serverSettingsBadge" style="border-color:var(--yellow-dim);color:var(--yellow-dim);">No server selected</span>
                 </div>
-                <div class="btn-row">
-                    <button class="btn btn-save" id="saveDOAIgnoreRangeButton">Set Exclusion</button>
-                    <button class="btn" id="resetButton">Clear</button>
-                </div>
-            </div>
 
-            <!-- Persist DOA Lines -->
-            <div class="card">
-                <div class="card-title">Persist DOA Lines</div>
-                <p style="font-size: 11px; color: var(--yellow-dim); line-height: 1.6;">
-                    When enabled, each bearing creates a new line in TAK instead of overwriting the previous one.
+                <p id="serverSettingsPrompt" style="font-size:11px;color:var(--yellow-dim);line-height:1.6;">
+                    Click <strong style="color:var(--yellow)">Configure</strong> on a server above to set its DOA exclusion range, persist mode, and line length.
                 </p>
-                <button class="toggle-btn off" id="persistDOALineButton">
-                    <span class="toggle-dot"></span>
-                    <span id="persistLabel">Persist Off</span>
-                </button>
-                <label for="lineDistance" style="margin-top: 16px;">Line Length (km)</label>
-                <input type="number" id="lineDistance" min="1" max="500" step="0.5" placeholder="6">
-                <div class="btn-row">
-                    <button class="btn btn-save" id="saveLineDistanceButton">Save</button>
+
+                <div id="serverSettingsForm" style="display:none;">
+                    <!-- DOA Exclusion -->
+                    <canvas id="compassCanvas"></canvas>
+                    <p class="compass-label" id="compassLabel">No exclusion set &mdash; all bearings active</p>
+
+                    <div class="input-row" style="margin-top:14px;">
+                        <div>
+                            <label for="startAngle">Exclusion Start &deg;</label>
+                            <input type="number" id="startAngle" min="0" max="359" placeholder="0">
+                        </div>
+                        <div>
+                            <label for="endAngle">Exclusion End &deg;</label>
+                            <input type="number" id="endAngle" min="0" max="359" placeholder="359">
+                        </div>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-save" id="saveDOAIgnoreRangeButton">Set Exclusion</button>
+                        <button class="btn" id="resetButton">Clear</button>
+                    </div>
+
+                    <!-- Persist -->
+                    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--yellow-faint);">
+                        <p style="font-size:11px;color:var(--yellow-dim);line-height:1.6;">
+                            When enabled, each bearing creates a new line in TAK instead of overwriting the previous one.
+                        </p>
+                        <button class="toggle-btn off" id="persistDOALineButton">
+                            <span class="toggle-dot"></span>
+                            <span id="persistLabel">Persist Off</span>
+                        </button>
+                    </div>
+
+                    <!-- Line distance -->
+                    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--yellow-faint);">
+                        <label for="lineDistance">Line Length (km)</label>
+                        <input type="number" id="lineDistance" min="1" max="500" step="0.5" placeholder="6">
+                        <div class="btn-row">
+                            <button class="btn btn-save" id="saveServerSettingsButton">Save All Station Settings</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div><!-- /left-col -->
 
-        <!-- ══ RIGHT COLUMN: Status ══ -->
+        <!-- ══ RIGHT COLUMN ══ -->
         <div class="right-col">
 
             <!-- Live Status -->
@@ -364,24 +370,17 @@
                     <span id="statusAge"></span>
                 </div>
 
+                <!-- TAK server status -->
                 <div class="status-row">
-                    <div class="status-indicator" id="krakenDot"></div>
-                    <span class="status-key">Kraken</span>
-                    <span class="status-val" id="krakenStatus">—</span>
+                    <div class="status-indicator" id="takDot"></div>
+                    <span class="status-key">TAK</span>
+                    <span class="status-val" id="takStatus">—</span>
                 </div>
 
-                <div class="status-row">
-                    <div class="status-indicator" id="gpsDot"></div>
-                    <span class="status-key">GPS</span>
-                    <span class="status-val" id="gpsStatus">—</span>
-                </div>
+                <!-- Per-server rows rendered dynamically -->
+                <div id="serverStatusRows"></div>
 
-                <div class="status-row">
-                    <div class="status-indicator" id="doaDot"></div>
-                    <span class="status-key">DOA</span>
-                    <span class="status-val" id="doaStatus">—</span>
-                </div>
-
+                <!-- Packets -->
                 <div class="status-row">
                     <div class="status-indicator" id="packetsDot"></div>
                     <span class="status-key">Packets</span>
@@ -392,18 +391,18 @@
             <!-- Quick Reference -->
             <div class="card">
                 <div class="card-title">Quick Reference</div>
-                <div style="font-size: 11px; line-height: 2; color: var(--yellow-dim);">
-                    <div><span style="color: var(--yellow);">Kraken Server</span> &mdash; IPv4 of the machine running KrakenSDR software. Station ID creates unique TAK identifiers when running multiple radios.</div>
-                    <div style="margin-top: 10px;"><span style="color: var(--yellow);">TAK Destination</span> &mdash; IPv4 and port of your TAK Server input. Multicast additionally broadcasts to 239.2.3.1:6969 for direct client reception.</div>
-                    <div style="margin-top: 10px;"><span style="color: var(--yellow);">DOA Exclusion</span> &mdash; Bearings inside the shaded wedge are suppressed. Useful when a known transmitter is in a fixed direction.</div>
-                    <div style="margin-top: 10px;"><span style="color: var(--yellow);">Persist Lines</span> &mdash; Off: one line is drawn and updated each cycle. On: each bearing generates a new line, leaving a history of readings.</div>
-                    <div style="margin-top: 10px;"><span style="color: var(--yellow);">Line Length</span> &mdash; Length of the DOA bearing line drawn in TAK, in kilometers. Default is 6 km.</div>
+                <div style="font-size:11px;line-height:2;color:var(--yellow-dim);">
+                    <div><span style="color:var(--yellow);">Kraken Servers</span> &mdash; Add one entry per KrakenSDR. Click <strong style="color:var(--yellow);">Configure</strong> to set each station's DOA exclusion range, persist mode, and line length independently.</div>
+                    <div style="margin-top:10px;"><span style="color:var(--yellow);">TAK Destination</span> &mdash; IPv4 and port of your TAK Server input. Multicast additionally broadcasts to 239.2.3.1:6969 for direct client reception.</div>
+                    <div style="margin-top:10px;"><span style="color:var(--yellow);">DOA Exclusion</span> &mdash; Bearings inside the shaded wedge are suppressed for that station. Useful when a known transmitter is in a fixed direction.</div>
+                    <div style="margin-top:10px;"><span style="color:var(--yellow);">Persist Lines</span> &mdash; Off: one line per station updated each cycle. On: each bearing generates a new line, leaving a history of readings.</div>
+                    <div style="margin-top:10px;"><span style="color:var(--yellow);">Line Length</span> &mdash; Length of the DOA bearing line in TAK, in kilometers. Configurable per station.</div>
                 </div>
             </div>
 
         </div><!-- /right-col -->
 
-    </div><!-- /main-grid -->
+    </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
@@ -411,102 +410,100 @@
     (function () {
         'use strict';
 
-        // ── State ────────────────────────────────────────────────
+        var SERVER_COLORS = ['#ff4444', '#44ffff', '#ff8844', '#ff44ff', '#44ff44', '#4488ff'];
+
+        // ── State ─────────────────────────────────────────────────
         var state = {
-            multicast: true,
-            persist: false,
-            startAngle: null,
-            endAngle: null,
-            doa: null,
-            firstLoad: true
+            multicast:      true,
+            servers:        [],    // [{ip, station, start_angle, end_angle, persist_uid_line, line_distance}]
+            serverDOAs:     [],    // [{angle, color}] for compass
+            editingIndex:   null,  // which server is currently open in the settings form
+            firstLoad:      true
         };
 
         // ── Toast ─────────────────────────────────────────────────
         function toast(msg, type) {
-            var container = document.getElementById('toastContainer');
             var el = document.createElement('div');
             el.className = 'toast ' + (type || 'info');
             el.textContent = msg;
-            container.appendChild(el);
+            document.getElementById('toastContainer').appendChild(el);
             setTimeout(function () { el.remove(); }, 3600);
         }
 
-        // ── IP validation ─────────────────────────────────────────
+        // ── Validation ────────────────────────────────────────────
         function isValidIP(ip) {
             return /^(\d{1,3}\.){3}\d{1,3}$/.test(ip) &&
                 ip.split('.').every(function (o) { return parseInt(o, 10) <= 255; });
         }
 
-        // ── Compass ───────────────────────────────────────────────
-        function bearingToRad(deg) {
-            return (deg - 90) * Math.PI / 180;
+        // ── POST helper ───────────────────────────────────────────
+        function postSettings(payload, successMsg) {
+            return fetch('/update_settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(function (r) {
+                if (r.ok) { toast(successMsg || 'Saved', 'success'); }
+                else       { toast('Error saving settings', 'error'); }
+                return r;
+            }).catch(function () { toast('Network error', 'error'); });
         }
+
+        // ── Compass ───────────────────────────────────────────────
+        function bearingToRad(deg) { return (deg - 90) * Math.PI / 180; }
 
         function resizeCanvas() {
-            var canvas = document.getElementById('compassCanvas');
-            var size = canvas.parentElement.clientWidth - 32; // subtract card padding
-            canvas.width  = size;
-            canvas.height = size;
+            var c = document.getElementById('compassCanvas');
+            var size = c.parentElement.clientWidth - 32;
+            c.width = c.height = size;
         }
 
-        function drawCompass(startAngle, endAngle, doaAngle) {
+        function drawCompass(startAngle, endAngle, doaList) {
             var canvas = document.getElementById('compassCanvas');
             resizeCanvas();
             var ctx = canvas.getContext('2d');
             var w = canvas.width, h = canvas.height;
             var cx = w / 2, cy = h / 2;
-            var r = Math.min(cx, cy) - 10;
+            var r  = Math.min(cx, cy) - 10;
 
             ctx.clearRect(0, 0, w, h);
 
-            // Background circle
             ctx.beginPath();
             ctx.arc(cx, cy, r, 0, 2 * Math.PI);
             ctx.fillStyle = '#0d0d0d';
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+            ctx.strokeStyle = 'rgba(255,215,0,0.4)';
             ctx.lineWidth = 1.5;
             ctx.stroke();
 
-            // Tick marks
             for (var deg = 0; deg < 360; deg += 5) {
-                var major = deg % 45 === 0;
+                var major  = deg % 45 === 0;
                 var medium = deg % 15 === 0;
-                var rad = bearingToRad(deg);
+                var rad    = bearingToRad(deg);
                 var innerR = major ? r - 14 : (medium ? r - 9 : r - 5);
                 ctx.beginPath();
                 ctx.moveTo(cx + innerR * Math.cos(rad), cy + innerR * Math.sin(rad));
-                ctx.lineTo(cx + r * Math.cos(rad), cy + r * Math.sin(rad));
+                ctx.lineTo(cx + r * Math.cos(rad),      cy + r * Math.sin(rad));
                 ctx.strokeStyle = major ? 'rgba(255,215,0,0.8)' : 'rgba(255,215,0,0.25)';
-                ctx.lineWidth = major ? 1.5 : 0.8;
+                ctx.lineWidth   = major ? 1.5 : 0.8;
                 ctx.stroke();
             }
 
-            // Degree labels at 45° intervals
             var labels = [
-                { d: 0,   l: 'N' },
-                { d: 45,  l: '45' },
-                { d: 90,  l: 'E' },
-                { d: 135, l: '135' },
-                { d: 180, l: 'S' },
-                { d: 225, l: '225' },
-                { d: 270, l: 'W' },
-                { d: 315, l: '315' }
+                {d:0,l:'N'},{d:45,l:'45'},{d:90,l:'E'},{d:135,l:'135'},
+                {d:180,l:'S'},{d:225,l:'225'},{d:270,l:'W'},{d:315,l:'315'}
             ];
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             labels.forEach(function (item) {
                 var rad = bearingToRad(item.d);
-                var lr = r - 26;
-                var x = cx + lr * Math.cos(rad);
-                var y = cy + lr * Math.sin(rad);
+                var lr  = r - 26;
                 var isCardinal = item.d % 90 === 0;
-                ctx.font = isCardinal ? 'bold 12px Courier New' : '9px Courier New';
+                ctx.font      = isCardinal ? 'bold 12px Courier New' : '9px Courier New';
                 ctx.fillStyle = item.d === 0 ? '#ff6666' : (isCardinal ? '#ffd700' : 'rgba(255,215,0,0.55)');
-                ctx.fillText(item.l, x, y);
+                ctx.fillText(item.l, cx + lr * Math.cos(rad), cy + lr * Math.sin(rad));
             });
 
-            // Faint crosshairs
             ctx.strokeStyle = 'rgba(255,215,0,0.12)';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -514,104 +511,299 @@
             ctx.moveTo(cx - r + 5, cy); ctx.lineTo(cx + r - 5, cy);
             ctx.stroke();
 
-            // Exclusion wedge
+            // Exclusion wedge for the server being configured
             if (startAngle !== null && endAngle !== null) {
                 var startRad = bearingToRad(startAngle);
                 var endRad   = bearingToRad(endAngle);
                 var wedgeR   = r - 3;
 
-                // Filled wedge — reddish tint to indicate suppressed/excluded zone
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.arc(cx, cy, wedgeR, startRad, endRad, false);
                 ctx.closePath();
-                ctx.fillStyle = 'rgba(220, 60, 60, 0.35)';
+                ctx.fillStyle = 'rgba(220,60,60,0.35)';
                 ctx.fill();
 
-                // Wedge border arc
                 ctx.beginPath();
                 ctx.arc(cx, cy, wedgeR, startRad, endRad, false);
-                ctx.strokeStyle = 'rgba(255, 80, 80, 0.85)';
+                ctx.strokeStyle = 'rgba(255,80,80,0.85)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Radial boundary lines
-                ctx.strokeStyle = 'rgba(255, 80, 80, 0.85)';
+                ctx.strokeStyle = 'rgba(255,80,80,0.85)';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.lineTo(cx + wedgeR * Math.cos(startRad), cy + wedgeR * Math.sin(startRad));
                 ctx.moveTo(cx, cy);
-                ctx.lineTo(cx + wedgeR * Math.cos(endRad), cy + wedgeR * Math.sin(endRad));
+                ctx.lineTo(cx + wedgeR * Math.cos(endRad),   cy + wedgeR * Math.sin(endRad));
                 ctx.stroke();
             }
 
-            // DOA arrow
-            if (doaAngle !== null) {
-                var drad = bearingToRad(doaAngle);
+            // DOA arrows
+            (doaList || []).forEach(function (entry) {
+                if (entry.angle === null || entry.angle === undefined) return;
+                var drad     = bearingToRad(entry.angle);
                 var arrowLen = r - 18;
-                var tipX = cx + arrowLen * Math.cos(drad);
-                var tipY = cy + arrowLen * Math.sin(drad);
+                var tipX     = cx + arrowLen * Math.cos(drad);
+                var tipY     = cy + arrowLen * Math.sin(drad);
+                var color    = entry.color || '#ff4444';
 
-                // Shaft
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.lineTo(tipX, tipY);
-                ctx.strokeStyle = '#ff4444';
+                ctx.strokeStyle = color;
                 ctx.lineWidth = 2.5;
                 ctx.stroke();
 
-                // Arrowhead
                 var headLen = 11, headSpread = 0.38;
                 ctx.beginPath();
                 ctx.moveTo(tipX, tipY);
                 ctx.lineTo(tipX - headLen * Math.cos(drad - headSpread), tipY - headLen * Math.sin(drad - headSpread));
                 ctx.moveTo(tipX, tipY);
                 ctx.lineTo(tipX - headLen * Math.cos(drad + headSpread), tipY - headLen * Math.sin(drad + headSpread));
-                ctx.strokeStyle = '#ff4444';
+                ctx.strokeStyle = color;
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // DOA degree label near tip
-                var labelR = arrowLen - 16;
-                ctx.font = 'bold 11px Courier New';
-                ctx.fillStyle = '#ff6666';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(Math.round(doaAngle) + '\u00b0', cx + labelR * Math.cos(drad), cy + labelR * Math.sin(drad));
-            }
+                if (entry.label) {
+                    var labelR = arrowLen - 16;
+                    ctx.font = 'bold 11px Courier New';
+                    ctx.fillStyle = color;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(Math.round(entry.angle) + '\u00b0',
+                        cx + labelR * Math.cos(drad), cy + labelR * Math.sin(drad));
+                }
+            });
 
-            // Center dot
             ctx.beginPath();
             ctx.arc(cx, cy, 4, 0, 2 * Math.PI);
             ctx.fillStyle = 'rgba(255,215,0,0.8)';
             ctx.fill();
         }
 
-        // Redraw compass on window resize
-        window.addEventListener('resize', function () {
-            drawCompass(state.startAngle, state.endAngle, state.doa);
-        });
+        window.addEventListener('resize', function () { redrawCompass(); });
+
+        function currentExclusion() {
+            if (state.editingIndex === null) return {start: null, end: null};
+            var srv = state.servers[state.editingIndex];
+            if (!srv) return {start: null, end: null};
+            return {start: srv.start_angle, end: srv.end_angle};
+        }
+
+        function redrawCompass() {
+            var excl = currentExclusion();
+            drawCompass(excl.start, excl.end, state.serverDOAs);
+        }
+
+        function updateCompassLabel(start, end) {
+            var label = document.getElementById('compassLabel');
+            if (start === null || end === null) {
+                label.textContent = 'No exclusion set \u2014 all bearings active';
+            } else {
+                label.textContent = 'Excluding ' + start + '\u00b0 \u2192 ' + end + '\u00b0 (clockwise)';
+            }
+        }
+
+        // ── Per-server configure panel ────────────────────────────
+        function openServerConfig(index) {
+            state.editingIndex = index;
+            var srv   = state.servers[index];
+            var color = SERVER_COLORS[index % SERVER_COLORS.length];
+
+            // Update card header badge
+            var badge = document.getElementById('serverSettingsBadge');
+            badge.textContent = 'Station ' + srv.station + ' \u2014 ' + srv.ip;
+            badge.style.borderColor = color;
+            badge.style.color       = color;
+
+            // Populate form fields
+            document.getElementById('startAngle').value   = srv.start_angle  != null ? srv.start_angle  : '';
+            document.getElementById('endAngle').value     = srv.end_angle    != null ? srv.end_angle    : '';
+            document.getElementById('lineDistance').value = srv.line_distance != null ? srv.line_distance : 6;
+
+            syncPersistButton(srv.persist_uid_line);
+            updateCompassLabel(srv.start_angle, srv.end_angle);
+
+            document.getElementById('serverSettingsPrompt').style.display = 'none';
+            document.getElementById('serverSettingsForm').style.display   = 'block';
+
+            // Highlight active Configure button
+            document.querySelectorAll('.btn-configure').forEach(function (btn, i) {
+                btn.style.borderColor = i === index ? color : '';
+                btn.style.color       = i === index ? color : '';
+            });
+
+            redrawCompass();
+        }
+
+        // ── Server list rendering ─────────────────────────────────
+        function renderServerList(servers) {
+            var list = document.getElementById('serverList');
+            list.innerHTML = '';
+
+            if (!servers || servers.length === 0) {
+                var p = document.createElement('p');
+                p.className = 'no-servers';
+                p.textContent = 'No servers configured';
+                list.appendChild(p);
+                return;
+            }
+
+            servers.forEach(function (srv, i) {
+                var color = SERVER_COLORS[i % SERVER_COLORS.length];
+
+                var entry  = document.createElement('div');
+                entry.className = 'server-entry';
+
+                // Header row
+                var header = document.createElement('div');
+                header.className = 'server-entry-header';
+
+                var dot = document.createElement('div');
+                dot.className = 'server-color-dot';
+                dot.style.background = color;
+
+                var info = document.createElement('div');
+                info.className = 'server-entry-info';
+                info.innerHTML =
+                    '<span class="server-entry-ip">' + srv.ip + '</span>' +
+                    '<span class="server-entry-station">Station ' + srv.station + '</span>';
+
+                var actions = document.createElement('div');
+                actions.className = 'server-entry-actions';
+
+                var configBtn = document.createElement('button');
+                configBtn.className = 'btn btn-configure';
+                configBtn.textContent = 'Configure';
+                if (state.editingIndex === i) {
+                    configBtn.style.borderColor = color;
+                    configBtn.style.color       = color;
+                }
+                (function (idx) {
+                    configBtn.addEventListener('click', function () { openServerConfig(idx); });
+                }(i));
+
+                var removeBtn = document.createElement('button');
+                removeBtn.className = 'btn btn-remove';
+                removeBtn.textContent = 'Remove';
+                (function (idx) {
+                    removeBtn.addEventListener('click', function () {
+                        state.servers.splice(idx, 1);
+                        if (state.editingIndex === idx) {
+                            state.editingIndex = null;
+                            document.getElementById('serverSettingsPrompt').style.display = '';
+                            document.getElementById('serverSettingsForm').style.display   = 'none';
+                            var badge = document.getElementById('serverSettingsBadge');
+                            badge.textContent    = 'No server selected';
+                            badge.style.borderColor = 'var(--yellow-dim)';
+                            badge.style.color       = 'var(--yellow-dim)';
+                        } else if (state.editingIndex !== null && state.editingIndex > idx) {
+                            state.editingIndex--;
+                        }
+                        renderServerList(state.servers);
+                        postSettings({ kraken_servers: state.servers }, 'Server removed');
+                    });
+                }(i));
+
+                actions.appendChild(configBtn);
+                actions.appendChild(removeBtn);
+                header.appendChild(dot);
+                header.appendChild(info);
+                header.appendChild(actions);
+                entry.appendChild(header);
+                list.appendChild(entry);
+            });
+        }
+
+        // ── Status: server rows ───────────────────────────────────
+        function renderServerStatus(servers) {
+            var container = document.getElementById('serverStatusRows');
+            container.innerHTML = '';
+
+            if (!servers || servers.length === 0) {
+                var row = document.createElement('div');
+                row.className = 'status-row';
+                row.innerHTML =
+                    '<div class="status-indicator warn"></div>' +
+                    '<span class="status-key">Kraken</span>' +
+                    '<span class="status-val dim">No servers configured</span>';
+                container.appendChild(row);
+                return;
+            }
+
+            var doaList = [];
+
+            servers.forEach(function (srv, i) {
+                var color = SERVER_COLORS[i % SERVER_COLORS.length];
+
+                // separator before each server block
+                if (i > 0) {
+                    var sep = document.createElement('div');
+                    sep.className = 'status-section-sep';
+                    container.appendChild(sep);
+                }
+
+                // Kraken reachability row
+                var krakenRow = document.createElement('div');
+                krakenRow.className = 'status-row';
+                var dotStyle = srv.reachable
+                    ? 'background:' + color + ';box-shadow:0 0 6px ' + color
+                    : '';
+                krakenRow.innerHTML =
+                    '<div class="status-indicator ' + (srv.reachable ? 'ok' : 'err') + '" style="' + dotStyle + '"></div>' +
+                    '<span class="status-key" style="color:' + color + ';opacity:0.9">Stn ' + srv.station + '</span>' +
+                    '<span class="status-val' + (srv.reachable ? '' : ' dim') + '">' +
+                        (srv.reachable ? srv.ip + ':8081' : srv.ip + ' \u2014 unreachable') +
+                    '</span>';
+                container.appendChild(krakenRow);
+
+                if (srv.reachable) {
+                    // GPS row
+                    var latFmt = (srv.lat !== null && srv.lat !== undefined)
+                        ? formatCoord(srv.lat, 'N', 'S') + '  ' + formatCoord(srv.lon, 'E', 'W')
+                        : null;
+                    var gpsRow = document.createElement('div');
+                    gpsRow.className = 'status-row';
+                    gpsRow.innerHTML =
+                        '<div class="status-indicator ' + (latFmt ? 'ok' : 'err') + '"></div>' +
+                        '<span class="status-key">GPS</span>' +
+                        '<span class="status-val' + (latFmt ? '' : ' dim') + '">' + (latFmt || 'No fix') + '</span>';
+                    container.appendChild(gpsRow);
+
+                    // DOA row
+                    var doaVal = (srv.doa !== null && srv.doa !== undefined)
+                        ? srv.doa.toFixed(1) + '\u00b0' : null;
+                    var doaRow = document.createElement('div');
+                    doaRow.className = 'status-row';
+                    doaRow.innerHTML =
+                        '<div class="status-indicator ' + (doaVal ? 'ok' : 'warn') + '"></div>' +
+                        '<span class="status-key">DOA</span>' +
+                        '<span class="status-val' + (doaVal ? '' : ' dim') + '">' + (doaVal || 'No signal') + '</span>';
+                    container.appendChild(doaRow);
+                }
+
+                doaList.push({ angle: srv.doa, color: color, label: servers.length > 1 });
+            });
+
+            state.serverDOAs = doaList;
+        }
 
         // ── Status polling ────────────────────────────────────────
         var lastPollTime = null;
 
-        function formatAgo(seconds) {
-            if (seconds === null || seconds === undefined) return 'never';
-            if (seconds < 60) return seconds.toFixed(0) + 's ago';
-            return Math.floor(seconds / 60) + 'm ago';
+        function formatAgo(s) {
+            if (s === null || s === undefined) return 'never';
+            return s < 60 ? s.toFixed(0) + 's ago' : Math.floor(s / 60) + 'm ago';
         }
 
-        function formatCoord(val, posLabel, negLabel) {
+        function formatCoord(val, pos, neg) {
             if (val === null || val === undefined) return null;
-            var abs = Math.abs(val).toFixed(4);
-            return abs + '\u00b0\u00a0' + (val >= 0 ? posLabel : negLabel);
+            return Math.abs(val).toFixed(4) + '\u00b0\u00a0' + (val >= 0 ? pos : neg);
         }
 
-        function setDot(id, state) {
-            var el = document.getElementById(id);
-            el.className = 'status-indicator ' + state;
-        }
+        function setDot(id, cls) { document.getElementById(id).className = 'status-indicator ' + cls; }
 
         function setVal(id, text, dim) {
             var el = document.getElementById(id);
@@ -619,74 +811,76 @@
             el.className = 'status-val' + (dim ? ' dim' : '');
         }
 
+        function syncMulticastButton() {
+            var btn = document.getElementById('takMulticastToggle');
+            var lbl = document.getElementById('multicastLabel');
+            if (state.multicast) {
+                btn.className = 'toggle-btn on';  lbl.textContent = 'Multicast On';
+            } else {
+                btn.className = 'toggle-btn off'; lbl.textContent = 'Multicast Off';
+            }
+        }
+
+        function syncPersistButton(val) {
+            var btn = document.getElementById('persistDOALineButton');
+            var lbl = document.getElementById('persistLabel');
+            if (val) {
+                btn.className = 'toggle-btn on';  lbl.textContent = 'Persist On';
+            } else {
+                btn.className = 'toggle-btn off'; lbl.textContent = 'Persist Off';
+            }
+        }
+
         function updateStatus(s) {
-            // Kraken
-            if (s.kraken_reachable) {
-                setDot('krakenDot', 'ok');
-                setVal('krakenStatus', s.kraken_server + ':8081');
-            } else {
-                setDot('krakenDot', 'err');
-                setVal('krakenStatus', s.kraken_server + ' — unreachable', true);
-            }
+            // TAK server row
+            var takConfigured = s.tak_server_ip && s.tak_server_ip !== '0.0.0.0';
+            setDot('takDot', takConfigured ? 'ok' : 'warn');
+            setVal('takStatus',
+                takConfigured
+                    ? s.tak_server_ip + ':' + s.tak_server_port + (s.tak_multicast ? '  +multicast' : '')
+                    : 'Not configured',
+                !takConfigured);
 
-            // GPS
-            var lat = formatCoord(s.lat, 'N', 'S');
-            var lon = formatCoord(s.lon, 'E', 'W');
-            if (lat && lon) {
-                setDot('gpsDot', 'ok');
-                setVal('gpsStatus', lat + '  ' + lon);
-            } else {
-                setDot('gpsDot', 'err');
-                setVal('gpsStatus', 'No fix', true);
-            }
+            // Per-server rows
+            renderServerStatus(s.servers || []);
 
-            // DOA
-            if (s.doa !== null && s.doa !== undefined) {
-                setDot('doaDot', 'ok');
-                setVal('doaStatus', s.doa.toFixed(1) + '\u00b0');
-            } else {
-                setDot('doaDot', 'warn');
-                setVal('doaStatus', 'No signal', true);
-            }
+            // Redraw compass with live DOAs (exclusion from currently editing server)
+            redrawCompass();
 
             // Packets
             if (s.packets_sent > 0) {
                 setDot('packetsDot', 'ok');
-                setVal('packetsStatus', s.packets_sent + '  —  last ' + formatAgo(s.last_packet_ago));
+                setVal('packetsStatus', s.packets_sent + '  \u2014  last ' + formatAgo(s.last_packet_ago));
             } else {
                 setDot('packetsDot', 'warn');
                 setVal('packetsStatus', 'None sent yet', true);
             }
 
-            // Compass DOA arrow
-            state.doa = s.doa;
-            drawCompass(state.startAngle, state.endAngle, state.doa);
-
-            // On first load: populate form fields and sync toggle states
+            // First load: populate form fields, sync toggles, load server list
             if (state.firstLoad) {
                 state.firstLoad = false;
 
-                document.getElementById('krakenServerInput').value  = s.kraken_server || '';
-                document.getElementById('krakenStation').value      = s.kraken_station || '';
-                document.getElementById('takServerIpInput').value   = s.tak_server_ip || '';
-                document.getElementById('takServerPortInput').value = s.tak_server_port || '';
-                document.getElementById('lineDistance').value       = s.line_distance != null ? s.line_distance : 6;
+                state.servers = (s.servers || []).map(function (srv) {
+                    return {
+                        ip:             srv.ip,
+                        station:        srv.station,
+                        start_angle:    srv.start_angle,
+                        end_angle:      srv.end_angle,
+                        persist_uid_line: srv.persist_uid_line,
+                        line_distance:  srv.line_distance,
+                    };
+                });
+                renderServerList(state.servers);
 
-                // Multicast toggle
+                document.getElementById('takServerIpInput').value   = s.tak_server_ip   || '';
+                document.getElementById('takServerPortInput').value = s.tak_server_port || '';
+
                 state.multicast = s.tak_multicast;
                 syncMulticastButton();
 
-                // Persist toggle
-                state.persist = s.persist_uid_line;
-                syncPersistButton();
-
-                // DOA angles
-                if (s.start_angle !== null && s.end_angle !== null) {
-                    state.startAngle = s.start_angle;
-                    state.endAngle   = s.end_angle;
-                    document.getElementById('startAngle').value = s.start_angle;
-                    document.getElementById('endAngle').value   = s.end_angle;
-                    updateCompassLabel(s.start_angle, s.end_angle);
+                // If there is exactly one server, auto-open it
+                if (state.servers.length === 1) {
+                    openServerConfig(0);
                 }
             }
         }
@@ -704,100 +898,39 @@
                 });
         }
 
-        // Update the "Xs ago" text on its own interval so it counts up smoothly
         setInterval(function () {
             if (lastPollTime) {
                 var secs = ((Date.now() - lastPollTime) / 1000).toFixed(0);
-                if (secs > 2) {
-                    document.getElementById('statusAge').textContent = 'updated ' + secs + 's ago';
-                }
+                if (secs > 2) document.getElementById('statusAge').textContent = 'updated ' + secs + 's ago';
             }
         }, 1000);
 
         pollStatus();
         setInterval(pollStatus, 3000);
 
-        // ── POST helper ───────────────────────────────────────────
-        function postSettings(payload, successMsg) {
-            return fetch('/update_settings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(function (r) {
-                if (r.ok) {
-                    toast(successMsg || 'Saved', 'success');
-                } else {
-                    toast('Error saving settings', 'error');
-                }
-                return r;
-            }).catch(function () {
-                toast('Network error', 'error');
-            });
-        }
-
-        // ── Compass label helper ──────────────────────────────────
-        function updateCompassLabel(start, end) {
-            var label = document.getElementById('compassLabel');
-            if (start === null || end === null) {
-                label.textContent = 'No exclusion set \u2014 all bearings active';
-            } else {
-                label.textContent = 'Excluding ' + start + '\u00b0 \u2192 ' + end + '\u00b0 (clockwise)';
-            }
-        }
-
-        // ── Button sync helpers ───────────────────────────────────
-        function syncMulticastButton() {
-            var btn   = document.getElementById('takMulticastToggle');
-            var label = document.getElementById('multicastLabel');
-            if (state.multicast) {
-                btn.className = 'toggle-btn on';
-                label.textContent = 'Multicast On';
-            } else {
-                btn.className = 'toggle-btn off';
-                label.textContent = 'Multicast Off';
-            }
-        }
-
-        function syncPersistButton() {
-            var btn   = document.getElementById('persistDOALineButton');
-            var label = document.getElementById('persistLabel');
-            if (state.persist) {
-                btn.className = 'toggle-btn on';
-                label.textContent = 'Persist On';
-            } else {
-                btn.className = 'toggle-btn off';
-                label.textContent = 'Persist Off';
-            }
-        }
-
         // ── Event listeners ───────────────────────────────────────
 
-        // Kraken server
-        document.getElementById('saveKrakenServerButton').addEventListener('click', function () {
-            var server  = document.getElementById('krakenServerInput').value.trim();
-            var station = document.getElementById('krakenStation').value.trim();
-            if (!isValidIP(server)) {
-                toast('Enter a valid IPv4 address for the Kraken server', 'error');
-                return;
-            }
-            if (!station) {
-                toast('Enter a station ID', 'error');
-                return;
-            }
-            postSettings({ kraken_server: server, kraken_station: station }, 'Kraken server saved');
+        // Add server
+        document.getElementById('addServerButton').addEventListener('click', function () {
+            var ip      = document.getElementById('newServerIp').value.trim();
+            var station = document.getElementById('newServerStation').value.trim();
+            if (!isValidIP(ip))  { toast('Enter a valid IPv4 address', 'error'); return; }
+            if (!station)        { toast('Enter a station ID', 'error'); return; }
+            state.servers.push({ ip: ip, station: station,
+                start_angle: null, end_angle: null, persist_uid_line: false, line_distance: 6 });
+            document.getElementById('newServerIp').value      = '';
+            document.getElementById('newServerStation').value = '';
+            renderServerList(state.servers);
+            postSettings({ kraken_servers: state.servers }, 'Server added');
         });
 
         // TAK server
         document.getElementById('saveTAKServerButton').addEventListener('click', function () {
             var ip   = document.getElementById('takServerIpInput').value.trim();
             var port = document.getElementById('takServerPortInput').value.trim();
-            if (!isValidIP(ip)) {
-                toast('Enter a valid IPv4 address for the TAK server', 'error');
-                return;
-            }
-            if (!/^\d+$/.test(port) || parseInt(port, 10) < 1 || parseInt(port, 10) > 65535) {
-                toast('Enter a valid port number (1–65535)', 'error');
-                return;
+            if (!isValidIP(ip)) { toast('Enter a valid IPv4 address for the TAK server', 'error'); return; }
+            if (!/^\d+$/.test(port) || parseInt(port,10) < 1 || parseInt(port,10) > 65535) {
+                toast('Enter a valid port number (1\u201365535)', 'error'); return;
             }
             postSettings({ tak_server_ip: ip, tak_server_port: port }, 'TAK destination saved');
         });
@@ -809,68 +942,63 @@
             postSettings({ takMulticast: state.multicast }, state.multicast ? 'Multicast enabled' : 'Multicast disabled');
         });
 
-        // Live preview — redraw compass as user types angle values
-        function previewDOA() {
+        // Live DOA exclusion preview
+        function previewExclusion() {
             var start = parseFloat(document.getElementById('startAngle').value);
             var end   = parseFloat(document.getElementById('endAngle').value);
-            var hasStart = !isNaN(start);
-            var hasEnd   = !isNaN(end);
             drawCompass(
-                (hasStart && hasEnd) ? start : null,
-                (hasStart && hasEnd) ? end   : null,
-                state.doa
+                (!isNaN(start) && !isNaN(end)) ? start : null,
+                (!isNaN(start) && !isNaN(end)) ? end   : null,
+                state.serverDOAs
             );
         }
-        document.getElementById('startAngle').addEventListener('input', previewDOA);
-        document.getElementById('endAngle').addEventListener('input', previewDOA);
+        document.getElementById('startAngle').addEventListener('input', previewExclusion);
+        document.getElementById('endAngle').addEventListener('input', previewExclusion);
 
-        // DOA exclusion save
+        // DOA exclusion set (per server — saved together with all station settings)
         document.getElementById('saveDOAIgnoreRangeButton').addEventListener('click', function () {
+            if (state.editingIndex === null) { toast('Select a server first', 'error'); return; }
             var start = document.getElementById('startAngle').value;
             var end   = document.getElementById('endAngle').value;
-            if (start === '' || end === '') {
-                toast('Enter both start and end bearings', 'error');
-                return;
-            }
-            state.startAngle = parseFloat(start);
-            state.endAngle   = parseFloat(end);
-            postSettings({ start_angle: start, end_angle: end }, 'Exclusion range set').then(function () {
-                updateCompassLabel(state.startAngle, state.endAngle);
-                drawCompass(state.startAngle, state.endAngle, state.doa);
-            });
+            if (start === '' || end === '') { toast('Enter both start and end bearings', 'error'); return; }
+            state.servers[state.editingIndex].start_angle = parseFloat(start);
+            state.servers[state.editingIndex].end_angle   = parseFloat(end);
+            updateCompassLabel(parseFloat(start), parseFloat(end));
+            redrawCompass();
+            postSettings({ kraken_servers: state.servers }, 'Exclusion range set');
         });
 
         // DOA exclusion clear
         document.getElementById('resetButton').addEventListener('click', function () {
+            if (state.editingIndex === null) { toast('Select a server first', 'error'); return; }
             document.getElementById('startAngle').value = '';
             document.getElementById('endAngle').value   = '';
-            state.startAngle = null;
-            state.endAngle   = null;
-            postSettings({ start_angle: null, end_angle: null }, 'Exclusion range cleared').then(function () {
-                updateCompassLabel(null, null);
-                drawCompass(null, null, state.doa);
-            });
+            state.servers[state.editingIndex].start_angle = null;
+            state.servers[state.editingIndex].end_angle   = null;
+            updateCompassLabel(null, null);
+            redrawCompass();
+            postSettings({ kraken_servers: state.servers }, 'Exclusion range cleared');
         });
 
         // Persist toggle
         document.getElementById('persistDOALineButton').addEventListener('click', function () {
-            state.persist = !state.persist;
-            syncPersistButton();
-            postSettings({ persist_uid_line: state.persist }, state.persist ? 'Persist lines on' : 'Persist lines off');
+            if (state.editingIndex === null) { toast('Select a server first', 'error'); return; }
+            var cur = state.servers[state.editingIndex].persist_uid_line;
+            state.servers[state.editingIndex].persist_uid_line = !cur;
+            syncPersistButton(!cur);
         });
 
-        // Line distance save
-        document.getElementById('saveLineDistanceButton').addEventListener('click', function () {
-            var val = parseFloat(document.getElementById('lineDistance').value);
-            if (isNaN(val) || val < 1) {
-                toast('Enter a line length of at least 1 km', 'error');
-                return;
-            }
-            postSettings({ line_distance: val }, 'Line length saved');
+        // Save all station settings
+        document.getElementById('saveServerSettingsButton').addEventListener('click', function () {
+            if (state.editingIndex === null) { toast('Select a server first', 'error'); return; }
+            var dist = parseFloat(document.getElementById('lineDistance').value);
+            if (isNaN(dist) || dist < 1) { toast('Enter a line length of at least 1 km', 'error'); return; }
+            state.servers[state.editingIndex].line_distance = dist;
+            postSettings({ kraken_servers: state.servers }, 'Station settings saved');
         });
 
-        // Initial compass draw (empty, sized to container)
-        drawCompass(null, null, null);
+        // Initial draw
+        drawCompass(null, null, []);
 
     })();
     </script>
