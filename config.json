@@ -1,0 +1,15 @@
+{
+  "kraken_servers": [
+    {
+      "ip": "0.0.0.0",
+      "station": "1",
+      "start_angle": null,
+      "end_angle": null,
+      "persist_uid_line": false,
+      "line_distance": 6
+    }
+  ],
+  "tak_server_ip": "0.0.0.0",
+  "tak_server_port": "6666",
+  "tak_multicast_state": true
+}
