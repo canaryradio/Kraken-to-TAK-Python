@@ -1,3 +1,18 @@
+#All this repo/fork does it update requirements.txt
+
+
+
+
+
+
+* JUST UPDATES REQUIREMENTS.txt
+* ----------------------------------------------------------------------------
+
+
+
+
+
+
 KrakenSDR Raspberry Pi 4 image quickstart (this image requires a couple commands to set the environment up)
 https://www.youtube.com/watch?v=3kVVMPc3WTc
 
